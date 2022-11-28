@@ -1,10 +1,4 @@
-const nullelements = [];
-let purp, lavender, lightLavender, cyan, lightCyan, redOrange,
-  white, rose, violet, gray, lightGray, black;
-
-
-
-const numParticles = 20;
+const numParticles = 32;
 
 // Timing
 const fps = 24;
@@ -22,7 +16,7 @@ const fanBlades = [];
 
 // Geometry
 const radius = 96; // 48;
-const numLoops = 160; // 200; // 160; // 60;
+const numLoops = 40; // 160; // 200; // 160; // 60;
 
 // Display of geometry and guides
 const showFan = true;
@@ -94,6 +88,9 @@ function setup() {
     particlesFront.push(new Particle(x1, y1));
     particlesBack.push(new Particle(x2, y2));
   }
+  
+  const den = displayDensity();
+  pixelDensity(den);
 
   createCanvas(wd, ht);
   frameRate(fps);
@@ -101,7 +98,7 @@ function setup() {
 }
 
 function draw() {
-  background(199);
+  background(223);
   noStroke();
 
   // Update all positions of our references

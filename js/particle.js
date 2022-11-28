@@ -1,8 +1,8 @@
 class Particle {
-  constructor(_x0, _y0) {
+  constructor(_x0, _y0, _heading) {
     this.x0 = _x0;
     this.y0 = _y0;
-    this.pos = { x: _x0, y: _y0 };
+    this.pos = createVector(_x0, _y0);
     this.diam = 5;
     this.travel = this.pos.x + this.diam;
     this.co = random(1) > 0.5 ? color('#FC8403') : color('#03fcc2');
@@ -10,14 +10,17 @@ class Particle {
     this.currentFrame = floor(random(this.lifespan));
     this.opacity = 0;
     this.xStretch = 0;
+    this.heading = _heading;
+    this.speed = 4;
   }
 
-  reset(newPoint) {
+  reset(newPoint, newHeading) {
     this.currentFrame = 0;
     this.lifespan = 200 + round(random(200));
     this.x0 = newPoint.x;
-    this.pos = { x: newPoint.x, y: newPoint.y };
+    this.pos = createVector(newPoint.x, newPoint.y);
     this.travel = this.pos.x + this.diam;
+    this.heading = newHeading;
   }
 
   update() {
