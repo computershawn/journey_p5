@@ -1,4 +1,4 @@
-const numParticles = 32;
+const numParticles = 60;
 
 // Timing
 const fps = 24;
@@ -16,7 +16,7 @@ const fanBlades = [];
 
 // Geometry
 const radius = 96; // 48;
-const numLoops = 40; // 160; // 200; // 160; // 60;
+const numLoops = 200; // 160; // 200; // 160; // 60;
 
 // Display of geometry and guides
 const showFan = true;
@@ -85,8 +85,8 @@ function setup() {
     const fb2 = fanBlades[rand2];
     const {x: x1, y: y1} = fb1.center;
     const {x: x2, y: y2} = fb2.center;
-    particlesFront.push(new Particle(x1, y1));
-    particlesBack.push(new Particle(x2, y2));
+    particlesFront.push(new Particle(x1, y1, random(TWO_PI)));
+    particlesBack.push(new Particle(x2, y2, random(TWO_PI)));
   }
   
   const den = displayDensity();
@@ -94,7 +94,7 @@ function setup() {
 
   createCanvas(wd, ht);
   frameRate(fps);
-  noLoop();
+  // noLoop();
 }
 
 function draw() {
@@ -120,10 +120,15 @@ const renderParticles = (particleList) => {
     par.update();
     par.render();
 
-    if (par.currentFrame === par.lifespan) {
+    // if (par.currentFrame === par.lifespan) {
+    //   const randIndex = getRandomIndex(fanBlades.length);
+    //   const fb = fanBlades[randIndex];
+    //   par.reset(fb.center, random(TWO_PI));
+    // }
+    if (par.isOutside()) {
       const randIndex = getRandomIndex(fanBlades.length);
       const fb = fanBlades[randIndex];
-      par.reset(fb.center);
+      par.reset(fb.center, random(TWO_PI));
     }
   });
 
