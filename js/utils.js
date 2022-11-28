@@ -36,3 +36,8 @@ const getArcPoints = (arcAngle, numPoints) => {
 
   return temp;
 }
+
+// GET RANDOM INDEX OF ITEM IN ARRAY
+const getRandomIndex = (len) => {
+  return floor(random(len));
+};

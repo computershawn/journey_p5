@@ -25,13 +25,15 @@ class FanBlade {
   // render(PVector point0, PVector point1, PVector point2, PVector point3) {
   render(point0, point1, point2, point3, co) {
     const {
+      center,
       isOpaque
     } = this;
-    if (isOpaque) {
-      strokeWeight(4);
-      stroke(0, 31);
-      line(point0.x, point0.y, point1.x, point1.y);
-    }
+    // Shadow effect
+    // if (isOpaque) {
+    //   strokeWeight(4);
+    //   stroke(0, 31);
+    //   line(point0.x, point0.y, point1.x, point1.y);
+    // }
     strokeWeight(1);
     //stroke(0, 63);
     stroke(0, 63);
@@ -47,5 +49,10 @@ class FanBlade {
     // vertex(point2.x, point2.y, point2.x, point2.y);
     // vertex(point3.x, point3.y, point3.x, point3.y);
     endShape(CLOSE);
+
+    // Experimental stuff here…
+    stroke(255, 0, 0);
+    // line(point1.x, point1.y, point2.x, point2.y);
+    line(center.x, center.y, (point1.x + point2.x) / 2, (point1.y + point2.y) / 2);
   }
 }
