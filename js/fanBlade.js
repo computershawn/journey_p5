@@ -33,8 +33,8 @@ class FanBlade {
     const vec = this.topEdge
       ? createVector((pt3.x + pt0.x) / 2, (pt3.y + pt0.y) / 2)
       : createVector((pt1.x + pt2.x) / 2, (pt1.y + pt2.y) / 2);
-
     const trajVec = createVector(center.x - vec.x, center.y - vec.y);
+    // console.log('trajVec', trajVec);
 
     return trajVec.heading();
   }

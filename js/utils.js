@@ -21,17 +21,14 @@ const wobble = (val, range) => {
 }
 
 // CALCULATE THE X/Y COORDINATES ALONG AN ARC 
-const getArcPoints = (arcAngle, numPoints) => {
+const getArcPoints = (arcAngle, numPoints, r) => {
   const temp = [];
   for (let i = 0; i < numPoints; i++) {
-    const r = 800;
     const a = 2 * i / numPoints * arcAngle - arcAngle - Math.PI / 2;
     const x = r * Math.cos(a);
     const y = r * Math.sin(a) + r;
-    temp.push({
-      x: cX + x,
-      y: cY + y
-    });
+    const vec = createVector(cX + x, cY + y);
+    temp.push(vec);
   }
 
   return temp;

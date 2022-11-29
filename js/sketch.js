@@ -1,8 +1,8 @@
-const numParticles = 60;
+const numParticles = 320;
 
 // Timing
 const fps = 24;
-const durationSec = 8;
+const durationSec = 16;
 const durationFrames = fps * durationSec;
 // let timeMode = 0;
 // let ani = 0;
@@ -15,14 +15,19 @@ const particlesBack = [];
 const fanBlades = [];
 
 // Geometry
-const radius = 96; // 48;
+const radius = 108; // 48;
 const numLoops = 200; // 160; // 200; // 160; // 60;
 
 // Display of geometry and guides
 const showFan = true;
 const showPoints = false;
+const showPath = false;
 const showBezier = true;
 const showParticles = false;
+
+// Colors
+let lightCyan;
+let violet;
 
 /*
 // Canvas
@@ -45,26 +50,23 @@ BeziCurve b;
 
 function setup() {
   violet = color(hexColors.violet);
+  lightCyan = color(hexColors.lightCyan);
 
-  // // Initialize particles
-  // for (let j = 0; j < numParticles / 2; j++) {
-  //   const x1 = random(wd);
-  //   const x2 = random(wd);
-  //   const y1 = random(ht);
-  //   const y2 = random(ht);
-  //   particlesFront.push(new Particle(x1, y1));
-  //   particlesBack.push(new Particle(x2, y2));
+  // Initialize points
+  // Unfurly path is a straight line
+  // const sp = 4;
+  // for (let j = 0; j < numLoops; j++) {
+  //   const w = (numLoops - 1) * sp;
+  //   const xOffset = cX - w / 2;
+  //   const vec = createVector(xOffset + j * sp, cY);
+  //   pts.push(vec);
   // }
 
   // Initialize points
-  const sp = 4;
+  // Unfurly path is an arc
+  const arcPoints = getArcPoints(QUARTER_PI, numLoops, 400);
   for (let j = 0; j < numLoops; j++) {
-    const w = (numLoops - 1) * sp;
-    const xOffset = cX - w / 2;
-    pts.push({
-      x: xOffset + j * sp,
-      y: cY,
-    });
+    pts.push(arcPoints[j]);
   }
 
   // Initialize null elements
@@ -74,8 +76,17 @@ function setup() {
 
   // Initialize fan blades
   for (let j = 0; j < nullElements.length - 1; j++) {
-    fanBlades.push(new FanBlade(j));
+    const fb = new FanBlade(j);
+    fanBlades.push(fb);
   }
+
+  // Do an initial run to get a 'heading' value from
+  // each fan blade; Each particle can attach itself
+  // to a random fan blade and move along its heading
+  nullElements.forEach(nE => {
+    nE.update(frameCount);
+  });
+  renderFan(fanBlades, nullElements);
 
   // Initialize particles
   for (let j = 0; j < numParticles / 2; j++) {
@@ -83,10 +94,8 @@ function setup() {
     const rand2 = getRandomIndex(fanBlades.length);
     const fb1 = fanBlades[rand1];
     const fb2 = fanBlades[rand2];
-    const {x: x1, y: y1} = fb1.center;
-    const {x: x2, y: y2} = fb2.center;
-    particlesFront.push(new Particle(x1, y1, random(TWO_PI)));
-    particlesBack.push(new Particle(x2, y2, random(TWO_PI)));
+    particlesFront.push(new Particle(fb1.center, fb1.getHeading()));
+    particlesBack.push(new Particle(fb2.center, fb2.getHeading()));
   }
   
   const den = displayDensity();
@@ -98,7 +107,7 @@ function setup() {
 }
 
 function draw() {
-  background(223);
+  background(23);
   noStroke();
 
   // Update all positions of our references
@@ -112,6 +121,10 @@ function draw() {
 
   if (showPoints) {
     renderPoints();
+  }
+
+  if (showPath) {
+    renderPath();
   }
 }
 
@@ -141,5 +154,13 @@ const renderPoints = () => {
     fill(255, 0, 0);
     circle(elem.point0.x + elem.x, elem.point0.y + elem.y, 3);
     circle(elem.point1.x + elem.x, elem.point1.y + elem.y, 3);
+  });
+};
+
+const renderPath = () => {
+  pts.forEach(pt => {
+    noStroke();
+    fill(255, 0, 0);
+    circle(pt.x, pt.y, 3);
   });
 };

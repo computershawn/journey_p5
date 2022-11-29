@@ -1,19 +1,19 @@
 class Particle {
-  constructor(_x0, _y0, _heading) {
-    // this.x0 = _x0;
-    // this.y0 = _y0;
-    this.x0 = random(wd);
-    this.y0 = random(ht);
-    this.pos = createVector(_x0, _y0);
+  constructor(_pos, _heading) {
+    this.x0 = _pos.x;
+    this.y0 = _pos.y;
+    this.pos = _pos;
     this.diam = 4;
     this.travel = this.pos.x + this.diam;
-    this.co = random(1) > 0.5 ? color('#444') : color('#CCC');
+    this.co = random(1) > 0.5 ? color(violet) : color(lightCyan);
     this.lifespan = 200 + round(random(200));
     this.currentFrame = floor(random(this.lifespan));
     this.opacity = 0;
     this.xStretch = 0;
     this.heading = _heading;
     this.speed = 1;
+    this.spinSpeed = 48;
+    this.fadeTime = 24;
   }
 
   reset(newPoint, newHeading) {
@@ -35,12 +35,12 @@ class Particle {
   }
 
   update() {
-    let {currentFrame, pos, travel} = this;
-    const {x0, y0, lifespan, speed, heading} = this;
-    const a = TWO_PI * (currentFrame % 20) / 20;
+    let {currentFrame, pos, spinSpeed} = this;
+    const {x0, y0, speed, heading, fadeTime} = this;
+    const a = TWO_PI * (currentFrame % spinSpeed) / spinSpeed;
     this.xStretch = sin(a);
-    if (this.currentFrame < 24) {
-      this.opacity = round(159 * currentFrame / 24);
+    if (this.currentFrame < fadeTime) {
+      this.opacity = round(159 * currentFrame / fadeTime);
     } else {
       this.opacity = 159;
     }
