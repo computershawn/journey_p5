@@ -128,7 +128,8 @@ const renderParticles = (particleList) => {
     if (par.isOutside()) {
       const randIndex = getRandomIndex(fanBlades.length);
       const fb = fanBlades[randIndex];
-      par.reset(fb.center, random(TWO_PI));
+      const heading = fb.getHeading();
+      par.reset(fb.center, heading);
     }
   });
 

@@ -5,7 +5,7 @@ class Particle {
     this.x0 = random(wd);
     this.y0 = random(ht);
     this.pos = createVector(_x0, _y0);
-    this.diam = 5;
+    this.diam = 4;
     this.travel = this.pos.x + this.diam;
     this.co = random(1) > 0.5 ? color('#444') : color('#CCC');
     this.lifespan = 200 + round(random(200));
