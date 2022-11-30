@@ -5,7 +5,7 @@ const fps = 24;
 const durationSec = 16;
 const durationFrames = fps * durationSec;
 let currentCycleFrame = 0;
-let animationMode = 1;
+let animationMode = 1;  // 0 = auto, 1 = scrub
 // let timeMode = 0;
 // let ani = 0;
 
@@ -54,11 +54,18 @@ function setup() {
   lightCyan = color(hexColors.lightCyan);
   violet = color(hexColors.violet);
 
+  // Set up UI Controls
   const slider = document.querySelector('#frame-number');
   slider.addEventListener('input', (e) => {
     const num = e.target.value;
     goToFrameNumber(num);
   });
+  if (animationMode === 1) {
+    const randFrame = floor(random(384))
+    slider.value = randFrame;
+    currentCycleFrame = randFrame;
+  }
+
   const animModeBtn = document.querySelector('#animation-mode');
   animModeBtn.addEventListener('click', () => {
     if (animationMode === 0) {
@@ -125,7 +132,7 @@ function setup() {
 }
 
 function draw() {
-  background(23);
+  background(0);
   noStroke();
 
   if (animationMode === 0) {
