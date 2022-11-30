@@ -11,7 +11,7 @@ class Particle {
     this.opacity = 0;
     this.xStretch = 0;
     this.heading = _heading;
-    this.speed = 1;
+    this.speed = random(0.8, 1.2);
     this.spinSpeed = round(random(32, 64));
     this.fadeTime = 24;
   }

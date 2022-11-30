@@ -11,6 +11,7 @@ class FanBlade {
       pt3: createVector(0, 0),
     };
     this.co = color(127, 127);
+    this.value = random(1);
   }
 
   update(pt0, pt1, pt2, pt3, _co) {
@@ -45,6 +46,7 @@ class FanBlade {
       // isOpaque,
       co,
       points: { pt0, pt1, pt2, pt3 },
+      value,
     } = this;
     // Shadow effect
     // if (isOpaque) {
@@ -67,30 +69,22 @@ class FanBlade {
     // vertex(point3.x, point3.y, point3.x, point3.y);
     endShape(CLOSE);
 
-    // Experimental stuff here…
-    // if (this.index === 30) {
-    //   let vec1 = createVector((point1.x + point2.x) / 2, (point1.y + point2.y) / 2);
-    //   let vec2 = createVector((point3.x + point0.x) / 2, (point3.y + point0.y) / 2);
-    //   const r = 20;
-
-    //   stroke(0, 255, 0);
-    //   let vec3;
-    //   const a = this.getAngle(point0, point1, point2, point3);
-    //   if (this.topEdge) {
-    //     noStroke();
-    //     fill(255, 0, 0);
-    //     circle(vec1.x, vec1.y, 4);
-    //     vec3 = createVector(center.x - vec1.x, center.y - vec1.y);
-    //     stroke(255, 0, 0);
-    //     line(vec1.x, vec1.y, vec1.x + r * cos(a), vec1.y + r * sin(a));
-    //   } else {
-    //     noStroke();
-    //     fill(255, 0, 0);
-    //     circle(vec2.x, vec2.y, 4);
-    //     vec3 = createVector(center.x - vec2.x, center.y - vec2.y);
-    //     stroke(255, 0, 0);
-    //     line(vec2.x, vec2.y, vec2.x + r * cos(a), vec2.y + r * sin(a));
-    //   }
-    // }
+    // fill(lightLavender);
+    noStroke();
+    fill(0, 31);
+    beginShape();
+    vertex(pt0.x, pt0.y);
+    vertex(pt0.x + value * (pt1.x - pt0.x), pt0.y + value * (pt1.y - pt0.y));
+    vertex(pt3.x + value * (pt2.x - pt3.x), pt3.y + value * (pt2.y - pt3.y));
+    // vertex(pt1.x + value * (pt2.x - pt1.x), pt1.y + value * (pt2.y - pt1.y));
+    // vertex(pt2.x + value * (pt1.x - pt2.x), pt2.y + value * (pt1.y - pt2.y));
+    // vertex(pt2.x, pt2.y);
+    vertex(pt3.x, pt3.y);
+    // texture(img);
+    // vertex(point0.x, point0.y, point0.x, point0.y);
+    // vertex(point1.x, point1.y, point1.x, point1.y);
+    // vertex(point2.x, point2.y, point2.x, point2.y);
+    // vertex(point3.x, point3.y, point3.x, point3.y);
+    endShape(CLOSE);
   }
 }

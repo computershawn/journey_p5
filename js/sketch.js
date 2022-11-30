@@ -28,7 +28,7 @@ const showBezier = true;
 const showParticles = false;
 
 // Colors
-let lavender, lightCyan, violet;
+let lavender, lightCyan, lightLavender, violet;
 
 /*
 // Canvas
@@ -51,6 +51,7 @@ BeziCurve b;
 
 function setup() {
   lavender = color(hexColors.lavender);
+  lightLavender = color(hexColors.lightLavender);
   lightCyan = color(hexColors.lightCyan);
   violet = color(hexColors.violet);
 
