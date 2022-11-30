@@ -4,6 +4,8 @@ const numParticles = 320;
 const fps = 24;
 const durationSec = 16;
 const durationFrames = fps * durationSec;
+let currentCycleFrame = 0;
+let animationMode = 1;
 // let timeMode = 0;
 // let ani = 0;
 
@@ -26,8 +28,7 @@ const showBezier = true;
 const showParticles = false;
 
 // Colors
-let lightCyan;
-let violet;
+let lavender, lightCyan, violet;
 
 /*
 // Canvas
@@ -49,8 +50,25 @@ BeziCurve b;
 */
 
 function setup() {
-  violet = color(hexColors.violet);
+  lavender = color(hexColors.lavender);
   lightCyan = color(hexColors.lightCyan);
+  violet = color(hexColors.violet);
+
+  const slider = document.querySelector('#frame-number');
+  slider.addEventListener('input', (e) => {
+    const num = e.target.value;
+    goToFrameNumber(num);
+  });
+  const animModeBtn = document.querySelector('#animation-mode');
+  animModeBtn.addEventListener('click', () => {
+    if (animationMode === 0) {
+      animationMode = 1;
+      animModeBtn.innerHTML = "play";
+    } else {
+      animationMode = 0;
+      animModeBtn.innerHTML = "pause";
+    }
+  });
 
   // Initialize points
   // Unfurly path is a straight line
@@ -110,9 +128,13 @@ function draw() {
   background(23);
   noStroke();
 
+  if (animationMode === 0) {
+    currentCycleFrame = frameCount % durationFrames;
+  }
+
   // Update all positions of our references
   nullElements.forEach(nE => {
-    nE.update(frameCount);
+    nE.update(currentCycleFrame);
   });
 
   renderParticles(particlesBack);

@@ -5,14 +5,14 @@ class Particle {
     this.pos = _pos;
     this.diam = 4;
     this.travel = this.pos.x + this.diam;
-    this.co = random(1) > 0.5 ? color(violet) : color(lightCyan);
+    this.co = random(1) > 0.5 ? color(violet) : color(lavender);
     this.lifespan = 200 + round(random(200));
     this.currentFrame = floor(random(this.lifespan));
     this.opacity = 0;
     this.xStretch = 0;
     this.heading = _heading;
     this.speed = 1;
-    this.spinSpeed = 48;
+    this.spinSpeed = round(random(32, 64));
     this.fadeTime = 24;
   }
 
