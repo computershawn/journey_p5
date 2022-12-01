@@ -19,6 +19,8 @@ const fanBlades = [];
 // Geometry
 const radius = 108; // 48;
 const numLoops = 200; // 160; // 200; // 160; // 60;
+let balance = 0.5;
+let diff = 4.5;
 
 // Display of geometry and guides
 const showFan = true;
@@ -28,18 +30,13 @@ const showBezier = true;
 const showParticles = false;
 
 // Colors
-let lavender, lightCyan, lightLavender, violet;
+let lavender, violet;
 
 /*
 // Canvas
 PGraphics canv;
 
 const values = [];
-
-ControlP5 cp5;
-
-const  diff = 0;
-const  bal = 0;
 
 // Bezier Curve variables
 const dragging;
@@ -51,21 +48,30 @@ BeziCurve b;
 
 function setup() {
   lavender = color(hexColors.lavender);
-  lightLavender = color(hexColors.lightLavender);
-  lightCyan = color(hexColors.lightCyan);
   violet = color(hexColors.violet);
 
   // Set up UI Controls
-  const slider = document.querySelector('#frame-number');
-  slider.addEventListener('input', (e) => {
+  const frameSlider = document.querySelector('#frame-number');
+  frameSlider.addEventListener('input', (e) => {
     const num = e.target.value;
     goToFrameNumber(num);
   });
   if (animationMode === 1) {
     const randFrame = floor(random(384))
-    slider.value = randFrame;
+    frameSlider.value = randFrame;
     currentCycleFrame = randFrame;
   }
+
+  const balanceSlider = document.querySelector('#balance');
+  balanceSlider.addEventListener('input', (e) => {
+    const num = e.target.value;
+    balance = num / 100;
+  });
+
+  const diffSlider = document.querySelector('#diff');
+  diffSlider.addEventListener('input', (e) => {
+    diff = map(e.target.value, 0, 100, 1, 8);
+  });
 
   const animModeBtn = document.querySelector('#animation-mode');
   animModeBtn.addEventListener('click', () => {

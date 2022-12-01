@@ -1,10 +1,3 @@
-// This declaration is temporary. The 'bal' value
-// is user-controllable in the original Processing
-// sketch. Either make it controllable or leave it
-// as a constant
-const bal = 0.5;
-const diff = 4;
-
 class NullElement {
   constructor(_pos, _index) {
     this.x = _pos.x;
@@ -31,9 +24,9 @@ class NullElement {
     // console.log('unitAmount', unitAmount);
     // console.log('sinAmount', sinAmount);
 
-    this.point0.x = -len * bal * cos(a);
-    this.point0.y = -len * bal * sin(a);
-    this.point1.x = len * (1.0 - bal) * cos(a) * 0.5;
-    this.point1.y = len * (1.0 - bal) * sin(a) * 0.5;
+    this.point0.x = -len * balance * cos(a);
+    this.point0.y = -len * balance * sin(a);
+    this.point1.x = len * (1.0 - balance) * cos(a) * 0.5;
+    this.point1.y = len * (1.0 - balance) * sin(a) * 0.5;
   }
 }
