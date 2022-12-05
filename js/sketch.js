@@ -23,11 +23,11 @@ let balance = 0.5;
 let diff = 4.5;
 
 // Display of geometry and guides
-const showFan = true;
-const showPoints = false;
-const showPath = false;
-const showBezier = true;
-const showParticles = false;
+let showFan = true;
+let showPoints = false;
+let showPath = false;
+let showBezier = true;
+let showParticles = false;
 
 // Colors
 let lavender, violet;
@@ -47,6 +47,11 @@ BeziCurve b;
 */
 
 function setup() {
+  const allComps = getComps();
+  const index = getRandomIndex(allComps.length);
+  randomComp = allComps[index];
+  loadComp(randomComp);
+
   lavender = color(hexColors.lavender);
   violet = color(hexColors.violet);
 
@@ -82,6 +87,29 @@ function setup() {
       animationMode = 0;
       animModeBtn.innerHTML = "pause";
     }
+  });
+
+  const showPathBtn = document.querySelector('#show-path');
+  showPathBtn.addEventListener('click', () => {
+    if (!showPath) {
+      showPath = true;
+      showPathBtn.innerHTML = "hide path";
+    } else {
+      showPath = false;
+      showPathBtn.innerHTML = "show path";
+    }
+  });
+
+  const saveCompBtn = document.querySelector('#save-comp');
+  saveCompBtn.addEventListener('click', () => {
+    saveComp();
+    // if (!showPath) {
+    //   showPath = true;
+    //   showPathBtn.innerHTML = "hide path";
+    // } else {
+    //   showPath = false;
+    //   showPathBtn.innerHTML = "show path";
+    // }
   });
 
   // Initialize points
@@ -151,9 +179,17 @@ function draw() {
     nE.update(currentCycleFrame);
   });
 
-  renderParticles(particlesBack);
+  // Render particles behind the fan
+  if (renderParticles) {
+    renderParticles(particlesBack);
+  }
+
   renderFan(fanBlades, nullElements);
-  renderParticles(particlesFront);
+
+  // Render particles in front of the fan
+  if (renderParticles) {
+    renderParticles(particlesFront);
+  }
 
   if (showPoints) {
     renderPoints();

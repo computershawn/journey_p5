@@ -3,7 +3,7 @@ class Particle {
     this.x0 = _pos.x;
     this.y0 = _pos.y;
     this.pos = _pos;
-    this.diam = 4;
+    this.diam = round(random(4, 6));
     this.travel = this.pos.x + this.diam;
     this.co = random(1) > 0.5 ? color(violet) : color(lavender);
     this.lifespan = 200 + round(random(200));

@@ -47,3 +47,33 @@ const goToFrameNumber = (frameNum) => {
     currentCycleFrame = frameNum % durationFrames;
   }
 }
+
+// SAVE SETTINGS OF CURRENT COMPOSITION
+const saveComp = () => {
+  const comps = getComps();
+
+  settings = {
+    balance: balance,
+    currentCycleFrame: currentCycleFrame,
+    diff: diff,
+  };
+
+  comps.push(settings);
+
+  window.localStorage.setItem('savedComps', JSON.stringify(comps));
+};
+
+const getComps = () => {
+  let savedComps = window.localStorage.getItem('savedComps');
+
+  if (!savedComps) {
+    return [];
+  }
+
+  return JSON.parse(savedComps);
+}
+
+
+const loadComp = (compObj) => {
+  console.log('compObj.diff', compObj.diff);
+}
