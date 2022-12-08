@@ -6,8 +6,6 @@ const durationSec = 16;
 const durationFrames = fps * durationSec;
 let currentCycleFrame = 0;
 let animationMode = 1;  // 0 = auto, 1 = scrub
-// let timeMode = 0;
-// let ani = 0;
 
 // Collections of things
 const pts = [];
@@ -46,8 +44,6 @@ const  mouseDY = 0;
 BeziCurve b;
 */
 
-// let compIndex = 0;
-
 function setup() {
   lavender = color(hexColors.lavender);
   violet = color(hexColors.violet);
@@ -62,53 +58,6 @@ function setup() {
     goToFrameNumber(num);
   });
 
-  const comps = getAllComps();
-  if (comps.length) {
-    const compSelect = document.querySelector('#comp-select');
-    comps.forEach((_c, index) => {
-      const option = document.createElement('div');
-      option.classList.add('item');
-      option.innerText = `comp ${index + 1}`;
-      option.addEventListener('click', () => {
-        const compParams = getComp(comps[index]);
-        if (animationMode === 1) {
-          frameSlider.value = compParams.storedCycleFrame;
-          currentCycleFrame = compParams.storedCycleFrame;
-        }
-
-        balanceSlider.value = compParams.storedBalance;
-        balance = compParams.storedBalance / 100;
-
-        diffSlider.value = compParams.storedDiff;
-        diff = map(compParams.storedDiff, 0, 100, 1, 8);
-      });
-      compSelect.appendChild(option);
-    });
-
-    document.querySelector('#dropdown-container').style.display = 'inline-block';
-  }
-
-  // const allComps = getComps();
-  // const hasStoredComps = allComps.length > 0;
-
-  // if (hasStoredComps) {
-  //   const index = getRandomIndex(allComps.length);
-  //   // randomComp = allComps[index];
-  //   const compParams = getComp(allComps, index);
-  //   // console.log('compParams', compParams);
-
-  //   if (animationMode === 1) {
-  //     frameSlider.value = compParams.storedCycleFrame;
-  //     currentCycleFrame = compParams.storedCycleFrame;
-  //   }
-
-  //   balanceSlider.value = compParams.storedBalance;
-  //   balance = compParams.storedBalance / 100;
-
-  //   diffSlider.value = compParams.storedDiff;
-  //   diff = map(compParams.storedDiff, 0, 100, 1, 8);
-  // }
-
   balanceSlider.addEventListener('input', (e) => {
     const num = e.target.value;
     balance = num / 100;
@@ -117,6 +66,30 @@ function setup() {
   diffSlider.addEventListener('input', (e) => {
     diff = map(e.target.value, 0, 100, 1, 8);
   });
+
+  const comps = getAllComps();
+  const params = getComp(comps[0]);
+  setComp(params, frameSlider, balanceSlider, diffSlider);
+
+  if (comps.length) {
+    const compSelect = document.querySelector('#comp-select');
+    comps.forEach((_c, index) => {
+      const option = document.createElement('div');
+      option.classList.add('item');
+      if (index === 0) {
+        option.classList.add('active');
+      }
+      option.innerText = `comp ${index + 1}`;
+      option.addEventListener('click', () => {
+        const params = getComp(comps[index]);
+        setComp(params, frameSlider, balanceSlider, diffSlider);
+        styleDropdown(index);
+      });
+      compSelect.appendChild(option);
+    });
+
+    document.querySelector('#dropdown-container').style.display = 'inline-block';
+  }
 
   const animModeBtn = document.querySelector('#animation-mode');
   animModeBtn.addEventListener('click', () => {
@@ -143,13 +116,6 @@ function setup() {
   const saveCompBtn = document.querySelector('#save-comp');
   saveCompBtn.addEventListener('click', () => {
     saveComp();
-    // if (!showPath) {
-    //   showPath = true;
-    //   showPathBtn.innerHTML = "hide path";
-    // } else {
-    //   showPath = false;
-    //   showPathBtn.innerHTML = "show path";
-    // }
   });
 
   // Initialize points
@@ -203,7 +169,6 @@ function setup() {
 
   createCanvas(wd, ht);
   frameRate(fps);
-  // noLoop();
 }
 
 function draw() {
@@ -245,11 +210,6 @@ const renderParticles = (particleList) => {
     par.update();
     par.render();
 
-    // if (par.currentFrame === par.lifespan) {
-    //   const randIndex = getRandomIndex(fanBlades.length);
-    //   const fb = fanBlades[randIndex];
-    //   par.reset(fb.center, random(TWO_PI));
-    // }
     if (par.isOutside()) {
       const randIndex = getRandomIndex(fanBlades.length);
       const fb = fanBlades[randIndex];
@@ -276,3 +236,32 @@ const renderPath = () => {
     circle(pt.x, pt.y, 3);
   });
 };
+
+const setComp = (
+  compParams,
+  frameSlider,
+  balanceSlider,
+  diffSlider,
+) => {
+  if (animationMode === 1) {
+    frameSlider.value = compParams.storedCycleFrame;
+    currentCycleFrame = compParams.storedCycleFrame;
+  }
+
+  balanceSlider.value = compParams.storedBalance;
+  balance = compParams.storedBalance / 100;
+
+  diffSlider.value = compParams.storedDiff;
+  diff = map(compParams.storedDiff, 0, 100, 1, 8);
+};
+
+const styleDropdown = (index) => {
+  const options = document.querySelectorAll('#comp-select .item');
+  options.forEach((option, i) => {
+    if (index === i) {
+      option.classList.add('active');
+    } else {
+      option.classList.remove('active');
+    }
+  });
+}

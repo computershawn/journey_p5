@@ -91,6 +91,23 @@ const getComp = (compObj) => {
   }
 
   return {};
+}
 
-  // diff = map(storedDiff, 0, 100, 1, 8);
+// DROPDOWN
+const toggleDropdown = () => {
+  document.getElementById("comp-select").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function (event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
 }

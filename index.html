@@ -15,7 +15,6 @@
   <script src="js/nullElement.js"></script>
   <script src="js/constants.js"></script>
   <script src="js/utils.js"></script>
-  <!-- <script src="js/dropdown.js"></script> -->
   <script src="js/rendering.js"></script>
   <script src="js/sketch.js"></script>
 
@@ -33,16 +32,15 @@
       <input id="diff" type="range" name="diff" min="0" max="100" value="50">
       <label for="diff">diff</label>
     </div>
-    <div class="button-row wut">
+    <div class="ui-row">
       <button id="show-path">show path</button>
       <button id="save-comp">save comp</button>
     </div>
     <div id="dropdown-container" class="dropdown">
-      <button onclick="toggleDropdown()" class="dropbtn">load comp ▾</button>
+      <button onclick="toggleDropdown()" class="dropbtn ui-row">load comp ▾</button>
       <div id="comp-select" class="dropdown-content"></div>
     </div>
   </div>
-  <script src="js/dropdown.js"></script>
 </body>
 
 </html>
