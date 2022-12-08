@@ -4,10 +4,8 @@ const numParticles = 320;
 const fps = 24;
 const durationSec = 16;
 const durationFrames = fps * durationSec;
-let currentCycleFrame = 0;
+let currentCycleFrame = 192;
 let animationMode = 1;  // 0 = auto, 1 = scrub
-// let timeMode = 0;
-// let ani = 0;
 
 // Collections of things
 const pts = [];
@@ -23,11 +21,11 @@ let balance = 0.5;
 let diff = 4.5;
 
 // Display of geometry and guides
-const showFan = true;
-const showPoints = false;
-const showPath = false;
-const showBezier = true;
-const showParticles = false;
+let showFan = true;
+let showPoints = false;
+let showPath = false;
+let showBezier = true;
+let showParticles = false;
 
 // Colors
 let lavender, violet;
@@ -52,26 +50,24 @@ function setup() {
 
   // Set up UI Controls
   const frameSlider = document.querySelector('#frame-number');
+  const balanceSlider = document.querySelector('#balance');
+  const diffSlider = document.querySelector('#diff');
+
   frameSlider.addEventListener('input', (e) => {
     const num = e.target.value;
     goToFrameNumber(num);
   });
-  if (animationMode === 1) {
-    const randFrame = floor(random(384))
-    frameSlider.value = randFrame;
-    currentCycleFrame = randFrame;
-  }
 
-  const balanceSlider = document.querySelector('#balance');
   balanceSlider.addEventListener('input', (e) => {
     const num = e.target.value;
     balance = num / 100;
   });
 
-  const diffSlider = document.querySelector('#diff');
   diffSlider.addEventListener('input', (e) => {
     diff = map(e.target.value, 0, 100, 1, 8);
   });
+
+  setupCompSelection(true);
 
   const animModeBtn = document.querySelector('#animation-mode');
   animModeBtn.addEventListener('click', () => {
@@ -82,6 +78,24 @@ function setup() {
       animationMode = 0;
       animModeBtn.innerHTML = "pause";
     }
+  });
+
+  const showPathBtn = document.querySelector('#show-path');
+  showPathBtn.addEventListener('click', () => {
+    if (!showPath) {
+      showPath = true;
+      showPathBtn.innerHTML = "hide path";
+    } else {
+      showPath = false;
+      showPathBtn.innerHTML = "show path";
+    }
+  });
+
+  const saveCompBtn = document.querySelector('#save-comp');
+  saveCompBtn.addEventListener('click', () => {
+    animationMode = 1;
+    saveComp();
+    setupCompSelection(false);
   });
 
   // Initialize points
@@ -129,13 +143,12 @@ function setup() {
     particlesFront.push(new Particle(fb1.center, fb1.getHeading()));
     particlesBack.push(new Particle(fb2.center, fb2.getHeading()));
   }
-  
+
   const den = displayDensity();
   pixelDensity(den);
 
   createCanvas(wd, ht);
   frameRate(fps);
-  // noLoop();
 }
 
 function draw() {
@@ -151,9 +164,17 @@ function draw() {
     nE.update(currentCycleFrame);
   });
 
-  renderParticles(particlesBack);
+  // Render particles behind the fan
+  if (renderParticles) {
+    renderParticles(particlesBack);
+  }
+
   renderFan(fanBlades, nullElements);
-  renderParticles(particlesFront);
+
+  // Render particles in front of the fan
+  if (renderParticles) {
+    renderParticles(particlesFront);
+  }
 
   if (showPoints) {
     renderPoints();
@@ -169,11 +190,6 @@ const renderParticles = (particleList) => {
     par.update();
     par.render();
 
-    // if (par.currentFrame === par.lifespan) {
-    //   const randIndex = getRandomIndex(fanBlades.length);
-    //   const fb = fanBlades[randIndex];
-    //   par.reset(fb.center, random(TWO_PI));
-    // }
     if (par.isOutside()) {
       const randIndex = getRandomIndex(fanBlades.length);
       const fb = fanBlades[randIndex];
@@ -200,3 +216,69 @@ const renderPath = () => {
     circle(pt.x, pt.y, 3);
   });
 };
+
+const setComp = (
+  compParams,
+  frameSlider,
+  balanceSlider,
+  diffSlider,
+) => {
+  if (animationMode === 1) {
+    frameSlider.value = compParams.storedCycleFrame;
+    currentCycleFrame = compParams.storedCycleFrame % durationFrames;
+  }
+
+  balanceSlider.value = compParams.storedBalance;
+  balance = compParams.storedBalance / 100;
+
+  diffSlider.value = compParams.storedDiff;
+  diff = map(compParams.storedDiff, 0, 100, 1, 8);
+};
+
+const styleDropdown = (index) => {
+  const options = document.querySelectorAll('#comp-select .item');
+  options.forEach((option, i) => {
+    if (index === i) {
+      option.classList.add('active');
+    } else {
+      option.classList.remove('active');
+    }
+  });
+}
+
+const setupCompSelection = (isInitial) => {  
+  const comps = getAllComps();
+  
+  if (comps.length) {
+    const selectedIndex = isInitial ? 0 : comps.length - 1;
+    const params = getComp(comps[selectedIndex]);
+    const frameSlider = document.querySelector('#frame-number');
+    const balanceSlider = document.querySelector('#balance');
+    const diffSlider = document.querySelector('#diff');
+    setComp(params, frameSlider, balanceSlider, diffSlider);
+    
+    // Remove existing options from dropdown
+    const compSelect = document.querySelector('#comp-select');
+    while (compSelect.firstChild) {
+      compSelect.removeChild(compSelect.firstChild);
+    }
+
+    // Add options to dropdown
+    comps.forEach((_c, index) => {
+      const option = document.createElement('div');
+      option.classList.add('item');
+      if (index === 0) {
+        option.classList.add('active');
+      }
+      option.innerText = `comp ${index + 1}`;
+      option.addEventListener('click', () => {
+        const params = getComp(comps[index]);
+        setComp(params, frameSlider, balanceSlider, diffSlider);
+        styleDropdown(index);
+      });
+      compSelect.appendChild(option);
+    });
+
+    document.querySelector('#dropdown-container').style.display = 'inline-block';
+  }
+}

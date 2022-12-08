@@ -39,11 +39,73 @@ const getRandomIndex = (len) => {
   return floor(random(len));
 };
 
-
 // JUMP TO A SPECIFIC FRAME NUMBER IN THE UNFURLY ANIMATION
 const goToFrameNumber = (frameNum) => {
-  // console.log('go to frame number', frameNum);
   if (animationMode === 1) {
     currentCycleFrame = frameNum % durationFrames;
+  }
+}
+
+// SAVE SETTINGS OF CURRENT COMPOSITION
+const saveComp = () => {
+  const comps = getAllComps();
+  
+  const diffValue = document.querySelector('#diff').value;
+  const balanceValue = document.querySelector('#balance').value;
+  const frameValue = document.querySelector('#frame-number').value;
+
+  settings = {
+    balance: balanceValue,
+    currentCycleFrame: frameValue,
+    diff: diffValue,
+  };
+
+  comps.push(settings);
+
+  window.localStorage.setItem('savedComps', JSON.stringify(comps));
+};
+
+const getAllComps = () => {
+  let savedComps = window.localStorage.getItem('savedComps');
+
+  if (!savedComps) {
+    return [];
+  }
+
+  return JSON.parse(savedComps);
+}
+
+const getComp = (compObj) => {
+  // const compObj = compsList[index];
+  const keys = Object.keys(compObj);
+  const hasAllKeys = keys.every((item) => ['balance', 'currentCycleFrame', 'diff'].includes(item));
+
+  if (hasAllKeys) {
+    return {
+      storedBalance: compObj.balance,
+      storedCycleFrame: compObj.currentCycleFrame,
+      storedDiff: compObj.diff,
+    };
+  }
+
+  return {};
+}
+
+// DROPDOWN
+const toggleDropdown = () => {
+  document.getElementById("comp-select").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function (event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
   }
 }
