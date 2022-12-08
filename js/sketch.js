@@ -4,7 +4,7 @@ const numParticles = 320;
 const fps = 24;
 const durationSec = 16;
 const durationFrames = fps * durationSec;
-let currentCycleFrame = 0;
+let currentCycleFrame = 192;
 let animationMode = 1;  // 0 = auto, 1 = scrub
 
 // Collections of things
@@ -67,29 +67,7 @@ function setup() {
     diff = map(e.target.value, 0, 100, 1, 8);
   });
 
-  const comps = getAllComps();
-  const params = getComp(comps[0]);
-  setComp(params, frameSlider, balanceSlider, diffSlider);
-
-  if (comps.length) {
-    const compSelect = document.querySelector('#comp-select');
-    comps.forEach((_c, index) => {
-      const option = document.createElement('div');
-      option.classList.add('item');
-      if (index === 0) {
-        option.classList.add('active');
-      }
-      option.innerText = `comp ${index + 1}`;
-      option.addEventListener('click', () => {
-        const params = getComp(comps[index]);
-        setComp(params, frameSlider, balanceSlider, diffSlider);
-        styleDropdown(index);
-      });
-      compSelect.appendChild(option);
-    });
-
-    document.querySelector('#dropdown-container').style.display = 'inline-block';
-  }
+  setupCompSelection(true);
 
   const animModeBtn = document.querySelector('#animation-mode');
   animModeBtn.addEventListener('click', () => {
@@ -115,7 +93,9 @@ function setup() {
 
   const saveCompBtn = document.querySelector('#save-comp');
   saveCompBtn.addEventListener('click', () => {
+    animationMode = 1;
     saveComp();
+    setupCompSelection(false);
   });
 
   // Initialize points
@@ -245,7 +225,7 @@ const setComp = (
 ) => {
   if (animationMode === 1) {
     frameSlider.value = compParams.storedCycleFrame;
-    currentCycleFrame = compParams.storedCycleFrame;
+    currentCycleFrame = compParams.storedCycleFrame % durationFrames;
   }
 
   balanceSlider.value = compParams.storedBalance;
@@ -264,4 +244,41 @@ const styleDropdown = (index) => {
       option.classList.remove('active');
     }
   });
+}
+
+const setupCompSelection = (isInitial) => {  
+  const comps = getAllComps();
+  
+  if (comps.length) {
+    const selectedIndex = isInitial ? 0 : comps.length - 1;
+    const params = getComp(comps[selectedIndex]);
+    const frameSlider = document.querySelector('#frame-number');
+    const balanceSlider = document.querySelector('#balance');
+    const diffSlider = document.querySelector('#diff');
+    setComp(params, frameSlider, balanceSlider, diffSlider);
+    
+    // Remove existing options from dropdown
+    const compSelect = document.querySelector('#comp-select');
+    while (compSelect.firstChild) {
+      compSelect.removeChild(compSelect.firstChild);
+    }
+
+    // Add options to dropdown
+    comps.forEach((_c, index) => {
+      const option = document.createElement('div');
+      option.classList.add('item');
+      if (index === 0) {
+        option.classList.add('active');
+      }
+      option.innerText = `comp ${index + 1}`;
+      option.addEventListener('click', () => {
+        const params = getComp(comps[index]);
+        setComp(params, frameSlider, balanceSlider, diffSlider);
+        styleDropdown(index);
+      });
+      compSelect.appendChild(option);
+    });
+
+    document.querySelector('#dropdown-container').style.display = 'inline-block';
+  }
 }

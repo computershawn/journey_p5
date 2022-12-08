@@ -39,10 +39,8 @@ const getRandomIndex = (len) => {
   return floor(random(len));
 };
 
-
 // JUMP TO A SPECIFIC FRAME NUMBER IN THE UNFURLY ANIMATION
 const goToFrameNumber = (frameNum) => {
-  // console.log('go to frame number', frameNum);
   if (animationMode === 1) {
     currentCycleFrame = frameNum % durationFrames;
   }
