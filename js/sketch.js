@@ -46,34 +46,74 @@ const  mouseDY = 0;
 BeziCurve b;
 */
 
-function setup() {
-  const allComps = getComps();
-  const index = getRandomIndex(allComps.length);
-  randomComp = allComps[index];
-  loadComp(randomComp);
+// let compIndex = 0;
 
+function setup() {
   lavender = color(hexColors.lavender);
   violet = color(hexColors.violet);
 
   // Set up UI Controls
   const frameSlider = document.querySelector('#frame-number');
+  const balanceSlider = document.querySelector('#balance');
+  const diffSlider = document.querySelector('#diff');
+
   frameSlider.addEventListener('input', (e) => {
     const num = e.target.value;
     goToFrameNumber(num);
   });
-  if (animationMode === 1) {
-    const randFrame = floor(random(384))
-    frameSlider.value = randFrame;
-    currentCycleFrame = randFrame;
+
+  const comps = getAllComps();
+  if (comps.length) {
+    const compSelect = document.querySelector('#comp-select');
+    comps.forEach((_c, index) => {
+      const option = document.createElement('div');
+      option.classList.add('item');
+      option.innerText = `comp ${index + 1}`;
+      option.addEventListener('click', () => {
+        const compParams = getComp(comps[index]);
+        if (animationMode === 1) {
+          frameSlider.value = compParams.storedCycleFrame;
+          currentCycleFrame = compParams.storedCycleFrame;
+        }
+
+        balanceSlider.value = compParams.storedBalance;
+        balance = compParams.storedBalance / 100;
+
+        diffSlider.value = compParams.storedDiff;
+        diff = map(compParams.storedDiff, 0, 100, 1, 8);
+      });
+      compSelect.appendChild(option);
+    });
+
+    document.querySelector('#dropdown-container').style.display = 'inline-block';
   }
 
-  const balanceSlider = document.querySelector('#balance');
+  // const allComps = getComps();
+  // const hasStoredComps = allComps.length > 0;
+
+  // if (hasStoredComps) {
+  //   const index = getRandomIndex(allComps.length);
+  //   // randomComp = allComps[index];
+  //   const compParams = getComp(allComps, index);
+  //   // console.log('compParams', compParams);
+
+  //   if (animationMode === 1) {
+  //     frameSlider.value = compParams.storedCycleFrame;
+  //     currentCycleFrame = compParams.storedCycleFrame;
+  //   }
+
+  //   balanceSlider.value = compParams.storedBalance;
+  //   balance = compParams.storedBalance / 100;
+
+  //   diffSlider.value = compParams.storedDiff;
+  //   diff = map(compParams.storedDiff, 0, 100, 1, 8);
+  // }
+
   balanceSlider.addEventListener('input', (e) => {
     const num = e.target.value;
     balance = num / 100;
   });
 
-  const diffSlider = document.querySelector('#diff');
   diffSlider.addEventListener('input', (e) => {
     diff = map(e.target.value, 0, 100, 1, 8);
   });
@@ -157,7 +197,7 @@ function setup() {
     particlesFront.push(new Particle(fb1.center, fb1.getHeading()));
     particlesBack.push(new Particle(fb2.center, fb2.getHeading()));
   }
-  
+
   const den = displayDensity();
   pixelDensity(den);
 

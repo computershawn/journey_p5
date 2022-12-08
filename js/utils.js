@@ -50,12 +50,16 @@ const goToFrameNumber = (frameNum) => {
 
 // SAVE SETTINGS OF CURRENT COMPOSITION
 const saveComp = () => {
-  const comps = getComps();
+  const comps = getAllComps();
+  
+  const diffValue = document.querySelector('#diff').value;
+  const balanceValue = document.querySelector('#balance').value;
+  const frameValue = document.querySelector('#frame-number').value;
 
   settings = {
-    balance: balance,
-    currentCycleFrame: currentCycleFrame,
-    diff: diff,
+    balance: balanceValue,
+    currentCycleFrame: frameValue,
+    diff: diffValue,
   };
 
   comps.push(settings);
@@ -63,7 +67,7 @@ const saveComp = () => {
   window.localStorage.setItem('savedComps', JSON.stringify(comps));
 };
 
-const getComps = () => {
+const getAllComps = () => {
   let savedComps = window.localStorage.getItem('savedComps');
 
   if (!savedComps) {
@@ -73,7 +77,20 @@ const getComps = () => {
   return JSON.parse(savedComps);
 }
 
+const getComp = (compObj) => {
+  // const compObj = compsList[index];
+  const keys = Object.keys(compObj);
+  const hasAllKeys = keys.every((item) => ['balance', 'currentCycleFrame', 'diff'].includes(item));
 
-const loadComp = (compObj) => {
-  console.log('compObj.diff', compObj.diff);
+  if (hasAllKeys) {
+    return {
+      storedBalance: compObj.balance,
+      storedCycleFrame: compObj.currentCycleFrame,
+      storedDiff: compObj.diff,
+    };
+  }
+
+  return {};
+
+  // diff = map(storedDiff, 0, 100, 1, 8);
 }

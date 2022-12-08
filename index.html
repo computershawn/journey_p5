@@ -3,6 +3,7 @@
 
 <head>
   <title>✨ journey ✨</title>
+  <link rel="stylesheet" href="css/dropdown.css">
   <link rel="stylesheet" href="css/style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.js"></script>
   <meta charset="utf-8" />
@@ -14,28 +15,34 @@
   <script src="js/nullElement.js"></script>
   <script src="js/constants.js"></script>
   <script src="js/utils.js"></script>
+  <!-- <script src="js/dropdown.js"></script> -->
   <script src="js/rendering.js"></script>
   <script src="js/sketch.js"></script>
-  
+
   <div id="ui-controls" class="controls">
-    <div>
+    <div class="wut">
       <input id="frame-number" type="range" name="framenumber" min="0" max="383" value="191">
       <label for="frame-number">frame</label>
       <button id="animation-mode">play</button>
     </div>
-    <div>
+    <div class="wut">
       <input id="balance" type="range" name="balance" min="0" max="100" value="50">
       <label for="balance">balance</label>
     </div>
-    <div>
+    <div class="wut">
       <input id="diff" type="range" name="diff" min="0" max="100" value="50">
       <label for="diff">diff</label>
     </div>
-    <div class="button-row">
+    <div class="button-row wut">
       <button id="show-path">show path</button>
       <button id="save-comp">save comp</button>
     </div>
-  </div>  
+    <div id="dropdown-container" class="dropdown">
+      <button onclick="toggleDropdown()" class="dropbtn">load comp ▾</button>
+      <div id="comp-select" class="dropdown-content"></div>
+    </div>
+  </div>
+  <script src="js/dropdown.js"></script>
 </body>
 
 </html>
