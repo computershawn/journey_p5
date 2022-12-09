@@ -65,6 +65,16 @@ const saveComp = () => {
   window.localStorage.setItem('savedComps', JSON.stringify(comps));
 };
 
+// REMOVE COMPOSITION SETTINGS
+const removeComp = (compIndex) => {
+  const comps = getAllComps();
+  const updatedComps = comps.filter((_item, index) => {
+    return index !== compIndex;
+  });
+
+  window.localStorage.setItem('savedComps', JSON.stringify(updatedComps));
+};
+
 const getAllComps = () => {
   let savedComps = window.localStorage.getItem('savedComps');
 

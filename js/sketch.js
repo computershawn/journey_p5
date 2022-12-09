@@ -67,7 +67,8 @@ function setup() {
     diff = map(e.target.value, 0, 100, 1, 8);
   });
 
-  setupCompSelection(true);
+  buildSelectMenu();
+  addSelectButtonActions(true);
 
   const animModeBtn = document.querySelector('#animation-mode');
   animModeBtn.addEventListener('click', () => {
@@ -95,7 +96,8 @@ function setup() {
   saveCompBtn.addEventListener('click', () => {
     animationMode = 1;
     saveComp();
-    setupCompSelection(false);
+    // buildSelectMenu();
+    addSelectButtonActions(false);
   });
 
   // Initialize points
@@ -246,17 +248,10 @@ const styleDropdown = (index) => {
   });
 }
 
-const setupCompSelection = (isInitial) => {  
+const buildSelectMenu = () => {
   const comps = getAllComps();
-  
+
   if (comps.length) {
-    const selectedIndex = isInitial ? 0 : comps.length - 1;
-    const params = getComp(comps[selectedIndex]);
-    const frameSlider = document.querySelector('#frame-number');
-    const balanceSlider = document.querySelector('#balance');
-    const diffSlider = document.querySelector('#diff');
-    setComp(params, frameSlider, balanceSlider, diffSlider);
-    
     // Remove existing options from dropdown
     const compSelect = document.querySelector('#comp-select');
     while (compSelect.firstChild) {
@@ -270,15 +265,55 @@ const setupCompSelection = (isInitial) => {
       if (index === 0) {
         option.classList.add('active');
       }
-      option.innerText = `comp ${index + 1}`;
-      option.addEventListener('click', () => {
+
+      const btn1 = document.createElement('div');
+      btn1.classList.add('load-btn');
+      btn1.innerText = `comp ${index + 1}`;
+      const btn2 = document.createElement('div');
+      btn2.classList.add('remove');
+      btn2.innerText = '✕';
+      option.appendChild(btn1);
+      option.appendChild(btn2);
+
+      compSelect.appendChild(option);
+    });
+  }
+}
+
+const addSelectButtonActions = (isInitial = false, shouldSetComp = true) => {
+  const comps = getAllComps();
+  const container = document.querySelector('#dropdown-container');
+  const options = document.querySelectorAll('.dropdown-content .item');
+
+  if (comps.length) {
+    const selectedIndex = isInitial ? 0 : comps.length - 1;
+    const params = getComp(comps[selectedIndex]);
+    const frameSlider = document.querySelector('#frame-number');
+    const balanceSlider = document.querySelector('#balance');
+    const diffSlider = document.querySelector('#diff');
+
+    if (shouldSetComp) {
+      setComp(params, frameSlider, balanceSlider, diffSlider);
+    }
+
+    options.forEach((opt, index) => {
+      const loadBtn = opt.querySelector('.load-btn');
+      const removeBtn = opt.querySelector('.remove');
+
+      loadBtn.addEventListener('click', () => {
         const params = getComp(comps[index]);
         setComp(params, frameSlider, balanceSlider, diffSlider);
         styleDropdown(index);
       });
-      compSelect.appendChild(option);
-    });
 
-    document.querySelector('#dropdown-container').style.display = 'inline-block';
+      removeBtn.addEventListener('click', () => {
+        console.log('should remove comp', index);
+        removeComp(index);
+        // buildSelectMenu();
+      });
+    });
+    container.style.display = 'inline-block';
+  } else {
+    container.style.display = 'none';
   }
 }

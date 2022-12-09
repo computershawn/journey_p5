@@ -1,3 +1,8 @@
+:root {
+  --fade-time: 0.4s;
+  --square-size: 2.5rem;
+}
+
 /* .dropbtn {
   background-color: #3498DB;
   color: white;
@@ -6,9 +11,10 @@
   border: none;
   cursor: pointer;
 } */
-.dropbtn {
+.dropbtn.ui-row {
   background-color: #F8F8F8;
   border: 1px solid #444;
+  margin-bottom: 0.25rem;
 }
 
 .dropbtn:hover,
@@ -31,23 +37,53 @@
   z-index: 1;
 }
 
-.dropdown-content div {
+.dropdown-content > div {
   color: black;
-  padding: 0.5rem 1rem;
+  /* padding: 0.5rem 1rem; */
   text-decoration: none;
   display: block;
 }
 
 .dropdown div.item {
+  display: flex;
+  align-items: center;
+  height: var(--square-size);
+}
+
+.dropdown div.item div {
   cursor: pointer;
 }
 
-.dropdown div.item:hover {
+.dropdown div.item .remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111;
+  height: var(--square-size);
+  width: var(--square-size);
+  transition: background-color var(--fade-time);
+}
+
+.dropdown div.item .load-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 6rem;
+  height: var(--square-size);
+  transition: background-color var(--fade-time);
+}
+
+div.active .load-btn {
   background-color: #bac2c6;
 }
 
-.dropdown div.active {
-  background-color: #bac2c6;
+div.active .remove {
+  background-color: #c4cbcf;
+}
+
+div.item:not(.active) .load-btn:hover,
+div.item .remove:hover {
+  background-color: #f0ccff;
 }
 
 .show {
