@@ -96,7 +96,7 @@ function setup() {
   saveCompBtn.addEventListener('click', () => {
     animationMode = 1;
     saveComp();
-    // buildSelectMenu();
+    updateMenu(true);
     addSelectButtonActions(false);
   });
 
@@ -283,6 +283,7 @@ const buildSelectMenu = () => {
 const addSelectButtonActions = (isInitial = false, shouldSetComp = true) => {
   const comps = getAllComps();
   const container = document.querySelector('#dropdown-container');
+  const selectElem = document.querySelector('.dropdown-content');
   const options = document.querySelectorAll('.dropdown-content .item');
 
   if (comps.length) {
@@ -296,7 +297,25 @@ const addSelectButtonActions = (isInitial = false, shouldSetComp = true) => {
       setComp(params, frameSlider, balanceSlider, diffSlider);
     }
 
-    options.forEach((opt, index) => {
+    // options.forEach((opt, index) => {
+    //   const loadBtn = opt.querySelector('.load-btn');
+    //   const removeBtn = opt.querySelector('.remove');
+
+    //   loadBtn.addEventListener('click', () => {
+    //     const params = getComp(comps[index]);
+    //     setComp(params, frameSlider, balanceSlider, diffSlider);
+    //     styleDropdown(index);
+    //   });
+
+    //   removeBtn.addEventListener('click', () => {
+    //     removeComp(comps[index].id);
+    //     console.log('updating menu');
+    //     updateMenu(false, index);
+    //   });
+    // });
+    // console.log('container', container);
+    comps.forEach((comp, index) => {
+      const opt = selectElem.childNodes[index];
       const loadBtn = opt.querySelector('.load-btn');
       const removeBtn = opt.querySelector('.remove');
 
@@ -307,13 +326,48 @@ const addSelectButtonActions = (isInitial = false, shouldSetComp = true) => {
       });
 
       removeBtn.addEventListener('click', () => {
-        console.log('should remove comp', index);
-        removeComp(index);
-        // buildSelectMenu();
+        console.log(comp.id);
+        removeComp(comp.id);
+        console.log('updating menu');
+        updateMenu(false, index);
       });
     });
     container.style.display = 'inline-block';
   } else {
     container.style.display = 'none';
+  }
+}
+
+const updateMenu = (saving = false, removeIndex = 0) => {
+  const container = document.querySelector('.dropdown-content');
+  const numItems = container.childNodes.length;
+
+  if (saving) {
+    const option = document.createElement('div');
+    option.classList.add('item');
+  
+    const btn1 = document.createElement('div');
+    btn1.classList.add('load-btn');
+    btn1.innerText = `comp ${numItems + 1}`;
+    const btn2 = document.createElement('div');
+    btn2.classList.add('remove');
+    btn2.innerText = '✕';
+  
+    option.appendChild(btn1);
+    option.appendChild(btn2);
+    container.appendChild(option);
+    styleDropdown(numItems);
+  } else {
+    const itemToRemove = container.childNodes[removeIndex];
+    container.removeChild(itemToRemove);
+
+    // RE-NUMBER THE ITEMS IF REMOVING AN ITEM THAT IS NOT THE LAST ITEM
+    if (removeIndex < numItems - 1) {
+      // console.log('deleted non-last item');
+      const btnElems = document.querySelectorAll('.dropdown-content .load-btn');
+      btnElems.forEach((btn, index) => {
+        btn.innerText = `comp ${index + 1}`;
+      });
+    }
   }
 }
