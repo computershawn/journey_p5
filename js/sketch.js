@@ -44,6 +44,11 @@ const  mouseDY = 0;
 BeziCurve b;
 */
 
+// Listen for the event.
+window.addEventListener('look', (e) => {
+  buildSelectMenu();
+}, false);
+
 function setup() {
   lavender = color(hexColors.lavender);
   violet = color(hexColors.violet);
@@ -67,10 +72,7 @@ function setup() {
     diff = map(e.target.value, 0, 100, 1, 8);
   });
 
-  const compsList = getAllComps();
-
-  buildSelectMenu(compsList);
-  addSelectButtonActions(true);
+  buildSelectMenu(true);
 
   const animModeBtn = document.querySelector('#animation-mode');
   animModeBtn.addEventListener('click', () => {
@@ -97,9 +99,9 @@ function setup() {
   const saveCompBtn = document.querySelector('#save-comp');
   saveCompBtn.addEventListener('click', () => {
     animationMode = 1;
-    const compsList = saveComp();
-    buildSelectMenu(compsList);
-    addSelectButtonActions(false);
+    const numComps = saveComp();
+    buildSelectMenu();
+    styleDropdown(numComps - 1);
   });
 
   // Initialize points
@@ -250,8 +252,19 @@ const styleDropdown = (index) => {
   });
 }
 
-const buildSelectMenu = (comps) => {
+const buildSelectMenu = (shouldSetComp = false) => {
+  const comps = getAllComps();
+  const container = document.querySelector('#dropdown-container');
   if (comps.length) {
+    const frameSlider = document.querySelector('#frame-number');
+    const balanceSlider = document.querySelector('#balance');
+    const diffSlider = document.querySelector('#diff');
+
+    if (shouldSetComp) {
+      const params = getComp(comps[0]);
+      setComp(params, frameSlider, balanceSlider, diffSlider);
+    }
+
     // Remove existing options from dropdown
     const compSelect = document.querySelector('#comp-select');
     while (compSelect.firstChild) {
@@ -259,59 +272,36 @@ const buildSelectMenu = (comps) => {
     }
 
     // Add options to dropdown
-    comps.forEach((_c, index) => {
+    comps.forEach((comp, index) => {
       const option = document.createElement('div');
       option.classList.add('item');
-      if (index === 0) {
+      if (index === 0 && shouldSetComp) {
         option.classList.add('active');
       }
 
-      const btn1 = document.createElement('div');
-      btn1.classList.add('load-btn');
-      btn1.innerText = `comp ${index + 1}`;
-      const btn2 = document.createElement('div');
-      btn2.classList.add('remove');
-      btn2.innerText = '✕';
-      option.appendChild(btn1);
-      option.appendChild(btn2);
-
-      compSelect.appendChild(option);
-    });
-  }
-}
-
-const addSelectButtonActions = (isInitial = false, shouldSetComp = true) => {
-  const comps = getAllComps();
-  const container = document.querySelector('#dropdown-container');
-  const selectElem = document.querySelector('.dropdown-content');
-
-  if (comps.length) {
-    const selectedIndex = isInitial ? 0 : comps.length - 1;
-    const params = getComp(comps[selectedIndex]);
-    const frameSlider = document.querySelector('#frame-number');
-    const balanceSlider = document.querySelector('#balance');
-    const diffSlider = document.querySelector('#diff');
-
-    if (shouldSetComp) {
-      setComp(params, frameSlider, balanceSlider, diffSlider);
-    }
-
-    comps.forEach((comp, index) => {
-      const opt = selectElem.childNodes[index];
-      const loadBtn = opt.querySelector('.load-btn');
-      const removeBtn = opt.querySelector('.remove');
-
+      const loadBtn = document.createElement('div');
+      loadBtn.classList.add('load-btn');
+      loadBtn.innerText = `comp ${index + 1}`;
       loadBtn.addEventListener('click', () => {
-        const params = getComp(comps[index]);
+        const params = getComp(comp);
         setComp(params, frameSlider, balanceSlider, diffSlider);
         styleDropdown(index);
       });
 
+      const removeBtn = document.createElement('div');
+      removeBtn.classList.add('remove');
+      removeBtn.innerText = '✕';
       removeBtn.addEventListener('click', () => {
-        const compsList = removeComp(comp.id);
-        buildSelectMenu(compsList);
-        addSelectButtonActions();
+        removeComp(comp.id);
+        container.dispatchEvent(new Event('look', {
+          "bubbles": true,
+          "cancelable": false,
+        }));
       });
+
+      option.appendChild(loadBtn);
+      option.appendChild(removeBtn);
+      compSelect.appendChild(option);
     });
     container.style.display = 'inline-block';
   } else {
