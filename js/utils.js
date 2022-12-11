@@ -55,14 +55,24 @@ const saveComp = () => {
   const frameValue = document.querySelector('#frame-number').value;
 
   settings = {
+    id: uniqueID(),
     balance: balanceValue,
     currentCycleFrame: frameValue,
     diff: diffValue,
   };
 
   comps.push(settings);
-
   window.localStorage.setItem('savedComps', JSON.stringify(comps));
+
+  return comps.length;
+};
+
+// REMOVE COMPOSITION SETTINGS
+const removeComp = (compID) => {
+  const comps = getAllComps();
+  const updatedComps = comps.filter((item) => item.id !== compID);
+
+  window.localStorage.setItem('savedComps', JSON.stringify(updatedComps));
 };
 
 const getAllComps = () => {
@@ -76,9 +86,8 @@ const getAllComps = () => {
 }
 
 const getComp = (compObj) => {
-  // const compObj = compsList[index];
   const keys = Object.keys(compObj);
-  const hasAllKeys = keys.every((item) => ['balance', 'currentCycleFrame', 'diff'].includes(item));
+  const hasAllKeys = ['balance', 'currentCycleFrame', 'diff', 'id'].every((item) => keys.includes(item));
 
   if (hasAllKeys) {
     return {
@@ -96,7 +105,7 @@ const toggleDropdown = () => {
   document.getElementById("comp-select").classList.toggle("show");
 }
 
-// Close the dropdown if the user clicks outside of it
+// CLOSE THE DROPDOWN IF THE USER CLICKS OUTSIDE OF IT
 window.onclick = function (event) {
   if (!event.target.matches('.dropbtn')) {
     var dropdowns = document.getElementsByClassName("dropdown-content");
@@ -109,3 +118,17 @@ window.onclick = function (event) {
     }
   }
 }
+
+// CREATE UNIQUE ID
+const uniqueID = () => {
+  const chars = '0123456789abcdef';
+  const len = chars.length;
+  let id = '';
+  for (let i = 0; i < 8; i++) {
+    const i = getRandomIndex(len);
+    const c = chars[i];
+    id += c;
+  }
+
+  return id;
+};
