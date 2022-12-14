@@ -28,8 +28,8 @@ class BeziCurve {
     const c212 = new Point(createVector(x05, y05), null);
     const c222 = new Point(createVector(x06, y06), null);
     const a211 = new Point(createVector(x01, y01), c211);
-    const a222 = new Point(createVector(x03, y03), c222);
     const a212 = new Point(createVector(x02, y02), c212);
+    const a222 = new Point(createVector(x03, y03), c222);
 
     this.cs = new CurveSet([a211, a212, a222, c211, c212, c222]);
   }

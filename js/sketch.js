@@ -108,10 +108,13 @@ function setup() {
 
   const saveCompBtn = document.querySelector('#save-comp');
   saveCompBtn.addEventListener('click', () => {
-    animationMode = 1;
-    const numComps = saveComp();
-    buildSelectMenu();
-    styleDropdown(numComps - 1);
+    const things = [bezi.cs.anchor11, bezi.cs.anchor12, bezi.cs.anchor22,
+      bezi.cs.ctrl11, bezi.cs.ctrl12, bezi.cs.ctrl21, bezi.cs.ctrl22];
+    console.log('bezi curveset points', things);
+    // animationMode = 1;
+    // const numComps = saveComp();
+    // buildSelectMenu();
+    // styleDropdown(numComps - 1);
   });
 
   // Initialize points
