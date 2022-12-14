@@ -1,37 +1,57 @@
 class BeziCurve {
-  constructor() {
-    const rMin = 48;
-    const rMax = 96;
-    const angle1 = random(TWO_PI);
-    const radius1 = random(rMin, rMax);
-    const angle2 = random(TWO_PI);
-    const radius2 = random(rMin, rMax);
-    const angle3 = random(TWO_PI);
-    const radius3 = random(rMin, rMax);
-    this.lastDragState = false;
+  constructor(curveSetPoints = {}) {
+    let a211, a212, a222, c211, c212, c222;
+    if (Object.keys(curveSetPoints).length) {
+      // curveSetPoints = {
+      //   pt1: {x, y},
+      //   pt2: {x, y},
+      //   pt3: {x, y},
+      //   pt4: {x, y},
+      //   pt5: {x, y},
+      //   pt6: {x, y},
+      // }
+      /*
+      c211 = new Point(createVector(pt4.x, pt4.y), null);
+      c212 = new Point(createVector(pt5.x, pt5.y), null);
+      c222 = new Point(createVector(pt6.x, pt6.y), null);
+      a211 = new Point(createVector(pt1.x, pt1.y), c211);
+      a212 = new Point(createVector(pt2.x, pt2.y), c212);
+      a222 = new Point(createVector(pt3.x, pt3.y), c222);
+      */
+    } else {
+      const rMin = 48;
+      const rMax = 96;
+      const angle1 = random(TWO_PI);
+      const radius1 = random(rMin, rMax);
+      const angle2 = random(TWO_PI);
+      const radius2 = random(rMin, rMax);
+      const angle3 = random(TWO_PI);
+      const radius3 = random(rMin, rMax);
+      this.lastDragState = false;
+  
+      const x01 = cX - wd / 3;
+      const y01 = cY + (random(1) > 0.5 ? 1 : -1) * random(0.5 * cY);
+      const x02 = cX;
+      const y02 = cY + (random(1) > 0.5 ? 1 : -1) * random(0.5 * cY);
+      const x03 = cX + wd / 3;
+      const y03 = cY + (random(1) > 0.5 ? 1 : -1) * random(0.5 * cY);
+  
+      const x04 = x01 + radius1 * cos(angle1);
+      const y04 = y01 + radius1 * sin(angle1);
+      const x05 = x02 + radius2 * cos(angle2);
+      const y05 = y02 + radius2 * sin(angle2);
+      const x06 = x03 + radius3 * cos(angle3);
+      const y06 = y03 + radius3 * sin(angle3);
+  
+      c211 = new Point(createVector(x04, y04), null);
+      c212 = new Point(createVector(x05, y05), null);
+      c222 = new Point(createVector(x06, y06), null);
+      a211 = new Point(createVector(x01, y01), c211);
+      a212 = new Point(createVector(x02, y02), c212);
+      a222 = new Point(createVector(x03, y03), c222);
+    }
 
-    const x01 = cX - wd / 3;
-    const y01 = cY + (random(1) > 0.5 ? 1 : -1) * random(0.5 * cY);
-    const x02 = cX;
-    const y02 = cY + (random(1) > 0.5 ? 1 : -1) * random(0.5 * cY);
-    const x03 = cX + wd / 3;
-    const y03 = cY + (random(1) > 0.5 ? 1 : -1) * random(0.5 * cY);
-
-    const x04 = x01 + radius1 * cos(angle1);
-    const y04 = y01 + radius1 * sin(angle1);
-    const x05 = x02 + radius2 * cos(angle2);
-    const y05 = y02 + radius2 * sin(angle2);
-    const x06 = x03 + radius3 * cos(angle3);
-    const y06 = y03 + radius3 * sin(angle3);
-
-    const c211 = new Point(createVector(x04, y04), null);
-    const c212 = new Point(createVector(x05, y05), null);
-    const c222 = new Point(createVector(x06, y06), null);
-    const a211 = new Point(createVector(x01, y01), c211);
-    const a212 = new Point(createVector(x02, y02), c212);
-    const a222 = new Point(createVector(x03, y03), c222);
-
-    this.cs = new CurveSet([a211, a212, a222, c211, c212, c222]);
+    this.cs = new CurveSet([c211, c212, c222, a211, a212, a222]);
   }
 
   render() {
@@ -46,13 +66,13 @@ class BeziCurve {
 
 class CurveSet {
   constructor(_points) {
-    this.anchor11 = _points[0];
-    this.anchor12 = _points[1];
-    this.anchor22 = _points[2];
-    this.ctrl11 = _points[3];
-    this.ctrl12 = _points[4];
+    this.ctrl11 = _points[0];
+    this.ctrl12 = _points[1];
+    this.ctrl22 = _points[2];
+    this.anchor11 = _points[3];
+    this.anchor12 = _points[4];
+    this.anchor22 = _points[5];
     this.ctrl21 = new Point(createVector(0, 0), null);
-    this.ctrl22 = _points[5];
   }
 
   drawLines() {
