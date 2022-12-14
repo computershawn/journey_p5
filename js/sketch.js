@@ -23,26 +23,23 @@ let diff = 4.5;
 // Display of geometry and guides
 let showFan = true;
 let showPoints = false;
-let showPath = false;
 let showBezier = true;
 let showParticles = false;
 
 // Colors
 let lavender, violet;
 
-/*
 // Canvas
-PGraphics canv;
+// PGraphics canv;
 
-const values = [];
+// const values = [];
 
 // Bezier Curve variables
-const dragging;
-const lastDragState = false;
-const  mouseDX = 0;
-const  mouseDY = 0;
-BeziCurve b;
-*/
+let dragging;
+let lastDragState = false;
+let mouseDX = 0;
+let mouseDY = 0;
+let bezi;
 
 // Listen for the event.
 window.addEventListener('look', (e) => {
@@ -52,6 +49,8 @@ window.addEventListener('look', (e) => {
 function setup() {
   lavender = color(hexColors.lavender);
   violet = color(hexColors.violet);
+
+  bezi = new BeziCurve();
 
   // Set up UI Controls
   const frameSlider = document.querySelector('#frame-number');
@@ -87,12 +86,23 @@ function setup() {
 
   const showPathBtn = document.querySelector('#show-path');
   showPathBtn.addEventListener('click', () => {
-    if (!showPath) {
-      showPath = true;
+    if (!showBezier) {
+      showBezier = true;
       showPathBtn.innerHTML = "hide path";
     } else {
-      showPath = false;
+      showBezier = false;
       showPathBtn.innerHTML = "show path";
+    }
+  });
+
+  const showGeomBtn = document.querySelector('#show-geom');
+  showGeomBtn.addEventListener('click', () => {
+    if (!showFan) {
+      showFan = true;
+      showGeomBtn.innerHTML = "hide geom";
+    } else {
+      showFan = false;
+      showGeomBtn.innerHTML = "show geom";
     }
   });
 
@@ -105,7 +115,8 @@ function setup() {
   });
 
   // Initialize points
-  // Unfurly path is a straight line
+  //
+  // CASE A: Unfurly path is a straight line
   // const sp = 4;
   // for (let j = 0; j < numLoops; j++) {
   //   const w = (numLoops - 1) * sp;
@@ -113,12 +124,17 @@ function setup() {
   //   const vec = createVector(xOffset + j * sp, cY);
   //   pts.push(vec);
   // }
-
-  // Initialize points
-  // Unfurly path is an arc
-  const arcPoints = getArcPoints(QUARTER_PI, numLoops, 400);
-  for (let j = 0; j < numLoops; j++) {
-    pts.push(arcPoints[j]);
+  //
+  // CASE B: Unfurly path is an arc
+  // const arcPoints = getArcPoints(QUARTER_PI, numLoops, 400);
+  // for (let j = 0; j < numLoops; j++) {
+  //   pts.push(arcPoints[j]);
+  // }
+  //
+  // CASE C: Unfurly path is a Bezier curve
+  const beziPoints = bezi.getPoints();
+  for (let j = 0; j < beziPoints.length; j++) {
+    pts.push(beziPoints[j]);
   }
 
   // Initialize null elements
@@ -170,25 +186,30 @@ function draw() {
     nE.update(currentCycleFrame);
   });
 
-  // Render particles behind the fan
-  if (renderParticles) {
-    renderParticles(particlesBack);
-  }
-
-  renderFan(fanBlades, nullElements);
-
-  // Render particles in front of the fan
-  if (renderParticles) {
-    renderParticles(particlesFront);
+  if (showFan) {
+    // Render particles behind the fan
+    if (renderParticles) {
+      renderParticles(particlesBack);
+    }
+  
+    renderFan(fanBlades, nullElements);
+  
+    // Render particles in front of the fan
+    if (renderParticles) {
+      renderParticles(particlesFront);
+    }
   }
 
   if (showPoints) {
     renderPoints();
   }
 
-  if (showPath) {
-    renderPath();
+  // Bezier curve rendering
+  if (showBezier) {
+    bezi.render();
   }
+
+  lastDragState = dragging;
 }
 
 const renderParticles = (particleList) => {
@@ -212,14 +233,6 @@ const renderPoints = () => {
     fill(255, 0, 0);
     circle(elem.point0.x + elem.x, elem.point0.y + elem.y, 3);
     circle(elem.point1.x + elem.x, elem.point1.y + elem.y, 3);
-  });
-};
-
-const renderPath = () => {
-  pts.forEach(pt => {
-    noStroke();
-    fill(255, 0, 0);
-    circle(pt.x, pt.y, 3);
   });
 };
 
@@ -306,5 +319,21 @@ const buildSelectMenu = (shouldSetComp = false) => {
     container.style.display = 'inline-block';
   } else {
     container.style.display = 'none';
+  }
+}
+
+function mouseDragged() {
+  dragging = true;
+}
+
+function mouseReleased() {
+  dragging = false;
+  const temp = bezi.getPoints();
+  temp.forEach((pt, j) => {
+    pts[j] = pt;
+  });
+
+  for (let j = 0; j < pts.length; j++) {
+    nullElements[j] = new NullElement(pts[j], j);
   }
 }

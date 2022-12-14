@@ -35,25 +35,23 @@ class FanBlade {
       ? createVector((pt3.x + pt0.x) / 2, (pt3.y + pt0.y) / 2)
       : createVector((pt1.x + pt2.x) / 2, (pt1.y + pt2.y) / 2);
     const trajVec = createVector(center.x - vec.x, center.y - vec.y);
-    // console.log('trajVec', trajVec);
 
     return trajVec.heading();
   }
 
   render() {
     const {
-      // center,
-      // isOpaque,
+      isOpaque,
       co,
       points: { pt0, pt1, pt2, pt3 },
       value,
     } = this;
     // Shadow effect
-    // if (isOpaque) {
-    //   strokeWeight(4);
-    //   stroke(0, 31);
-    //   line(point0.x, point0.y, point1.x, point1.y);
-    // }
+    if (isOpaque) {
+      strokeWeight(4);
+      stroke(0, 31);
+      line(pt0.x, pt0.y, pt1.x, pt1.y);
+    }
     strokeWeight(1);
     stroke(0, 63);
     fill(co);
@@ -69,22 +67,23 @@ class FanBlade {
     // vertex(point3.x, point3.y, point3.x, point3.y);
     endShape(CLOSE);
 
-    // fill(lightLavender);
-    noStroke();
-    fill(0, 31);
-    beginShape();
-    vertex(pt0.x, pt0.y);
-    vertex(pt0.x + value * (pt1.x - pt0.x), pt0.y + value * (pt1.y - pt0.y));
-    vertex(pt3.x + value * (pt2.x - pt3.x), pt3.y + value * (pt2.y - pt3.y));
-    // vertex(pt1.x + value * (pt2.x - pt1.x), pt1.y + value * (pt2.y - pt1.y));
-    // vertex(pt2.x + value * (pt1.x - pt2.x), pt2.y + value * (pt1.y - pt2.y));
-    // vertex(pt2.x, pt2.y);
-    vertex(pt3.x, pt3.y);
-    // texture(img);
-    // vertex(point0.x, point0.y, point0.x, point0.y);
-    // vertex(point1.x, point1.y, point1.x, point1.y);
-    // vertex(point2.x, point2.y, point2.x, point2.y);
-    // vertex(point3.x, point3.y, point3.x, point3.y);
-    endShape(CLOSE);
+    // noStroke();
+    // fill(0, 31);
+    // beginShape();
+    // vertex(pt0.x, pt0.y);
+    // vertex(pt0.x + value * (pt1.x - pt0.x), pt0.y + value * (pt1.y - pt0.y));
+    // vertex(pt3.x + value * (pt2.x - pt3.x), pt3.y + value * (pt2.y - pt3.y));
+    // vertex(pt3.x, pt3.y);
+    // endShape(CLOSE);
+    noFill();
+    stroke(violet);
+    
+    
+    line(
+      pt0.x + value * (pt1.x - pt0.x),
+      pt0.y + value * (pt1.y - pt0.y),
+      pt3.x + value * (pt2.x - pt3.x),
+      pt3.y + value * (pt2.y - pt3.y)
+      );
   }
 }
