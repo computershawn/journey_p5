@@ -97,13 +97,14 @@ const getAllComps = () => {
 
 const getComp = (compObj) => {
   const keys = Object.keys(compObj);
-  const hasAllKeys = ['balance', 'currentCycleFrame', 'diff', 'id'].every((item) => keys.includes(item));
+  const hasAllKeys = ['balance', 'currentCycleFrame', 'diff', 'id', 'curveSetPoints'].every((item) => keys.includes(item));
 
   if (hasAllKeys) {
     return {
       storedBalance: compObj.balance,
       storedCycleFrame: compObj.currentCycleFrame,
       storedDiff: compObj.diff,
+      curveSetPoints: compObj.curveSetPoints,
     };
   }
 

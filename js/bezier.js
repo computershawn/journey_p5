@@ -2,22 +2,15 @@ class BeziCurve {
   constructor(curveSetPoints = {}) {
     let a211, a212, a222, c211, c212, c222;
     if (Object.keys(curveSetPoints).length) {
-      // curveSetPoints = {
-      //   pt1: {x, y},
-      //   pt2: {x, y},
-      //   pt3: {x, y},
-      //   pt4: {x, y},
-      //   pt5: {x, y},
-      //   pt6: {x, y},
-      // }
-      /*
+      const {
+        pt1, pt2, pt3, pt4, pt5, pt6
+      } = curveSetPoints;
       c211 = new Point(createVector(pt4.x, pt4.y), null);
       c212 = new Point(createVector(pt5.x, pt5.y), null);
       c222 = new Point(createVector(pt6.x, pt6.y), null);
       a211 = new Point(createVector(pt1.x, pt1.y), c211);
       a212 = new Point(createVector(pt2.x, pt2.y), c212);
       a222 = new Point(createVector(pt3.x, pt3.y), c222);
-      */
     } else {
       const rMin = 48;
       const rMax = 96;

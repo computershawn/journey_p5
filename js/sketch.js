@@ -50,8 +50,6 @@ function setup() {
   lavender = color(hexColors.lavender);
   violet = color(hexColors.violet);
 
-  bezi = new BeziCurve();
-
   // Set up UI Controls
   const frameSlider = document.querySelector('#frame-number');
   const balanceSlider = document.querySelector('#balance');
@@ -132,6 +130,12 @@ function setup() {
   // }
   //
   // CASE C: Unfurly path is a Bezier curve
+  const existingComps = getAllComps();
+  const csp = existingComps.length
+    ? getComp(existingComps[0])?.curveSetPoints
+    : null;
+
+  bezi = new BeziCurve(csp);
   const beziPoints = bezi.getPoints();
   for (let j = 0; j < beziPoints.length; j++) {
     pts.push(beziPoints[j]);
@@ -242,6 +246,7 @@ const setComp = (
   balanceSlider,
   diffSlider,
 ) => {
+  // console.log('compParams', compParams);
   if (animationMode === 1) {
     frameSlider.value = compParams.storedCycleFrame;
     currentCycleFrame = compParams.storedCycleFrame % durationFrames;
@@ -328,6 +333,10 @@ function mouseDragged() {
 
 function mouseReleased() {
   dragging = false;
+  resetBezier();
+}
+
+function resetBezier() {
   const temp = bezi.getPoints();
   temp.forEach((pt, j) => {
     pts[j] = pt;
