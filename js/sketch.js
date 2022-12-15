@@ -303,6 +303,9 @@ const buildSelectMenu = (shouldSetComp = false) => {
       loadBtn.addEventListener('click', () => {
         const params = getComp(comp);
         setComp(params, frameSlider, balanceSlider, diffSlider);
+        const csp = params.curveSetPoints;
+        bezi = new BeziCurve(csp);
+        resetBezier();
         styleDropdown(index);
       });
 
