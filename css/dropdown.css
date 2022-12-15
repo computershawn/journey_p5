@@ -89,3 +89,7 @@ div.item .remove:hover {
 .show {
   display: block;
 }
+
+label {
+  margin: 0 0.5rem 0 0.25rem;
+}

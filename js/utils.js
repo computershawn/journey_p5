@@ -54,11 +54,21 @@ const saveComp = () => {
   const balanceValue = document.querySelector('#balance').value;
   const frameValue = document.querySelector('#frame-number').value;
 
+  const curveSetPoints = {
+    pt1: {x: bezi.cs.anchor11.c.x, y: bezi.cs.anchor11.c.y},
+    pt2: {x: bezi.cs.anchor12.c.x, y: bezi.cs.anchor12.c.y},
+    pt3: {x: bezi.cs.anchor22.c.x, y: bezi.cs.anchor22.c.y},
+    pt4: {x: bezi.cs.ctrl11.c.x, y: bezi.cs.ctrl11.c.y},
+    pt5: {x: bezi.cs.ctrl12.c.x, y: bezi.cs.ctrl12.c.y},
+    pt6: {x: bezi.cs.ctrl22.c.x, y: bezi.cs.ctrl22.c.y},
+  };
+
   settings = {
     id: uniqueID(),
     balance: balanceValue,
     currentCycleFrame: frameValue,
     diff: diffValue,
+    curveSetPoints,
   };
 
   comps.push(settings);
@@ -87,13 +97,14 @@ const getAllComps = () => {
 
 const getComp = (compObj) => {
   const keys = Object.keys(compObj);
-  const hasAllKeys = ['balance', 'currentCycleFrame', 'diff', 'id'].every((item) => keys.includes(item));
+  const hasAllKeys = ['balance', 'currentCycleFrame', 'diff', 'id', 'curveSetPoints'].every((item) => keys.includes(item));
 
   if (hasAllKeys) {
     return {
       storedBalance: compObj.balance,
       storedCycleFrame: compObj.currentCycleFrame,
       storedDiff: compObj.diff,
+      curveSetPoints: compObj.curveSetPoints,
     };
   }
 
