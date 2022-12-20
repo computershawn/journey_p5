@@ -112,6 +112,14 @@ function setup() {
     styleDropdown(numComps - 1);
   });
 
+  const downloadBtn = document.querySelector('#download-comp');
+  downloadBtn.addEventListener('click', () => {
+    animationMode = 1;
+    const timestamp = round(Date.now() / 1000);
+    const filename = `journey-${timestamp}`;
+    saveCanvas(filename, 'png')
+  });
+
   // Initialize points
   //
   // CASE A: Unfurly path is a straight line
