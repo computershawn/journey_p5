@@ -48,6 +48,7 @@ class FanBlade {
     } = this;
     // Shadow effect
     if (isOpaque) {
+      strokeCap(SQUARE);
       strokeWeight(4);
       stroke(0, 31);
       line(pt0.x, pt0.y, pt1.x, pt1.y);
