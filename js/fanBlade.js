@@ -77,14 +77,15 @@ class FanBlade {
     // vertex(pt3.x, pt3.y);
     // endShape(CLOSE);
     noFill();
-    stroke(violet);
-    
-    
-    line(
-      pt0.x + value * (pt1.x - pt0.x),
-      pt0.y + value * (pt1.y - pt0.y),
-      pt3.x + value * (pt2.x - pt3.x),
-      pt3.y + value * (pt2.y - pt3.y)
+
+    for (let j = 0; j < 10; j++) {
+      const b = j / 10;
+      line(
+        pt0.x + b * value * (pt1.x - pt0.x),
+        pt0.y + b * value * (pt1.y - pt0.y),
+        pt3.x + b * value * (pt2.x - pt3.x),
+        pt3.y + b * value * (pt2.y - pt3.y)
       );
+    }
   }
 }

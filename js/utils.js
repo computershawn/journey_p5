@@ -143,3 +143,30 @@ const uniqueID = () => {
 
   return id;
 };
+
+
+const getColors = async () => {
+  const colorsUrl =
+    "https://raw.githubusercontent.com/Jam3/nice-color-palettes/master/1000.json";
+  const data = await fetch(colorsUrl).then((res) => res.json());
+  return data;
+};
+
+const initPalette = async () => {
+  const allCo = await getColors();
+  // document.getElementById("start-btn").disabled = false;
+
+  return allCo;
+}
+
+const pickPalette = (allColorsArray) => {
+  const randomIndex = getRandomIndex(allColorsArray.length);
+  const temp = allColorsArray[randomIndex];
+  
+  const swatchDivs = document.querySelectorAll('.swatch');
+  swatchDivs.forEach((s, i) => {
+    s.style.backgroundColor = temp[i];
+  });  
+
+  return temp;
+}

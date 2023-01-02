@@ -28,6 +28,8 @@ let showParticles = false;
 
 // Colors
 let lavender, violet;
+let allColors;
+let palette;
 
 // Canvas
 // PGraphics canv;
@@ -104,6 +106,17 @@ function setup() {
     }
   });
 
+  const showParticlesBtn = document.querySelector('#show-particles');
+  showParticlesBtn.addEventListener('click', () => {
+    if (!showParticles) {
+      showParticles = true;
+      showParticlesBtn.innerHTML = "hide particles";
+    } else {
+      showParticles = false;
+      showParticlesBtn.innerHTML = "show particles";
+    }
+  });
+
   const saveCompBtn = document.querySelector('#save-comp');
   saveCompBtn.addEventListener('click', () => {
     animationMode = 1;
@@ -117,7 +130,7 @@ function setup() {
     animationMode = 1;
     const timestamp = round(Date.now() / 1000);
     const filename = `journey-${timestamp}`;
-    saveCanvas(filename, 'png')
+    saveCanvas(filename, 'png');
   });
 
   // Initialize points
@@ -183,6 +196,11 @@ function setup() {
 
   createCanvas(wd, ht);
   frameRate(fps);
+
+  initPalette().then((data) => {
+    allColors = data;
+    palette = pickPalette(data);
+  });
 }
 
 function draw() {
@@ -200,14 +218,14 @@ function draw() {
 
   if (showFan) {
     // Render particles behind the fan
-    if (renderParticles) {
+    if (showParticles) {
       renderParticles(particlesBack);
     }
   
     renderFan(fanBlades, nullElements);
   
     // Render particles in front of the fan
-    if (renderParticles) {
+    if (showParticles) {
       renderParticles(particlesFront);
     }
   }
