@@ -85,18 +85,20 @@ class FanBlade {
     // endShape(CLOSE);
     noFill();
 
-    for (let j = 1; j < this.tickMarks.length; j++) {
-      const b = j / 10;
-      const tickMarkIndex = this.tickMarks[j];
-      if (palette.length) {
-        stroke(palette[tickMarkIndex]);
+    if (isOpaque) {
+      for (let j = 1; j < this.tickMarks.length; j++) {
+        const b = j / 10;
+        const tickMarkIndex = this.tickMarks[j];
+        if (palette.length) {
+          stroke(palette[tickMarkIndex]);
+        }
+        line(
+          pt0.x + b * value * (pt1.x - pt0.x),
+          pt0.y + b * value * (pt1.y - pt0.y),
+          pt3.x + b * value * (pt2.x - pt3.x),
+          pt3.y + b * value * (pt2.y - pt3.y)
+        );
       }
-      line(
-        pt0.x + b * value * (pt1.x - pt0.x),
-        pt0.y + b * value * (pt1.y - pt0.y),
-        pt3.x + b * value * (pt2.x - pt3.x),
-        pt3.y + b * value * (pt2.y - pt3.y)
-      );
     }
   }
 }

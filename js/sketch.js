@@ -28,7 +28,7 @@ let showParticles = false;
 
 // Colors
 let lavender, violet;
-let allColors;
+let allColors = [];
 let palette = [];
 
 // Canvas
@@ -131,6 +131,13 @@ function setup() {
     const timestamp = round(Date.now() / 1000);
     const filename = `journey-${timestamp}`;
     saveCanvas(filename, 'png');
+  });
+
+  const loadPaletteBtn = document.querySelector('#change-palette');
+  loadPaletteBtn.addEventListener('click', () => {
+    if (allColors.length) {
+      palette = pickPalette(allColors);
+    }
   });
 
   // Initialize points
