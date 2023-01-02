@@ -29,7 +29,7 @@ let showParticles = false;
 // Colors
 let lavender, violet;
 let allColors;
-let palette;
+let palette = [];
 
 // Canvas
 // PGraphics canv;
@@ -199,7 +199,7 @@ function setup() {
 
   initPalette().then((data) => {
     allColors = data;
-    palette = pickPalette(data);
+    palette = pickPalette(data).map(c => color(c));
   });
 }
 

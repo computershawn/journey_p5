@@ -6,6 +6,10 @@ main {
   margin-top: 0.5rem;
 }
 
+.controls {
+  width: 1280px;
+}
+
 .controls div.wut {
   background: #FEFEFE;
   height: 2.5rem;
@@ -15,6 +19,8 @@ main {
 }
 
 .ui-row {
+  display: flex;
+  justify-content: space-between;
   margin: 0.5rem 0 0;
 }
 

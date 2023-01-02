@@ -12,6 +12,12 @@ class FanBlade {
     };
     this.co = color(127, 127);
     this.value = random(1);
+    const tickMarks = [];
+    for (let i = 0; i < 10; i++) {
+      const index = floor(random(5));
+      tickMarks.push(index);
+    }
+    this.tickMarks = tickMarks;
   }
 
   update(pt0, pt1, pt2, pt3, _co) {
@@ -49,9 +55,10 @@ class FanBlade {
     // Shadow effect
     if (isOpaque) {
       strokeCap(SQUARE);
-      strokeWeight(4);
-      stroke(0, 31);
+      strokeWeight(3);
+      stroke(0, 55);
       line(pt0.x, pt0.y, pt1.x, pt1.y);
+      line(pt1.x, pt1.y, pt2.x, pt2.y);
     }
     strokeWeight(1);
     stroke(0, 63);
@@ -78,8 +85,12 @@ class FanBlade {
     // endShape(CLOSE);
     noFill();
 
-    for (let j = 0; j < 10; j++) {
+    for (let j = 1; j < this.tickMarks.length; j++) {
       const b = j / 10;
+      const tickMarkIndex = this.tickMarks[j];
+      if (palette.length) {
+        stroke(palette[tickMarkIndex]);
+      }
       line(
         pt0.x + b * value * (pt1.x - pt0.x),
         pt0.y + b * value * (pt1.y - pt0.y),

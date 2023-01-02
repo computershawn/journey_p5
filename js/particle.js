@@ -56,7 +56,8 @@ class Particle {
       opacity, pos, xStretch, diam, co, heading,
     } = this;
     stroke(47, opacity);
-    fill(co, opacity);
+    // fill(co, opacity);
+    fill(255, 223);
     push();
     translate(pos.x, pos.y);
     rotate(heading)
