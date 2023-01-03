@@ -21,7 +21,7 @@ const renderFan = (fanBladesArr, nullRefs) => {
     const pv2 = {x: px2, y: py2};
     const pv3 = {x: px3, y: py3};
     
-    fb.update(pv0, pv1, pv2, pv3, color(239));
+    fb.update(pv0, pv1, pv2, pv3);
     fb.render();
     // noLoop();
   }

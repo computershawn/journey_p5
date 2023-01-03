@@ -25,9 +25,13 @@ let showFan = true;
 let showPoints = false;
 let showBezier = true;
 let showParticles = false;
+let showColor = true;
 
 // Colors
-let lavender, violet;
+let allColors = [];
+let palette = [];
+const tickSequence = [];
+const maxTicks = 40;
 
 // Canvas
 // PGraphics canv;
@@ -47,9 +51,6 @@ window.addEventListener('look', (e) => {
 }, false);
 
 function setup() {
-  lavender = color(hexColors.lavender);
-  violet = color(hexColors.violet);
-
   // Set up UI Controls
   const frameSlider = document.querySelector('#frame-number');
   const balanceSlider = document.querySelector('#balance');
@@ -75,10 +76,10 @@ function setup() {
   animModeBtn.addEventListener('click', () => {
     if (animationMode === 0) {
       animationMode = 1;
-      animModeBtn.innerHTML = "play";
+      animModeBtn.innerHTML = 'play';
     } else {
       animationMode = 0;
-      animModeBtn.innerHTML = "pause";
+      animModeBtn.innerHTML = 'pause';
     }
   });
 
@@ -86,10 +87,10 @@ function setup() {
   showPathBtn.addEventListener('click', () => {
     if (!showBezier) {
       showBezier = true;
-      showPathBtn.innerHTML = "hide path";
+      showPathBtn.innerHTML = '⚫ path';
     } else {
       showBezier = false;
-      showPathBtn.innerHTML = "show path";
+      showPathBtn.innerHTML = '⚪ path';
     }
   });
 
@@ -97,10 +98,34 @@ function setup() {
   showGeomBtn.addEventListener('click', () => {
     if (!showFan) {
       showFan = true;
-      showGeomBtn.innerHTML = "hide geom";
+      showGeomBtn.innerHTML = '⚫ geom';
     } else {
       showFan = false;
-      showGeomBtn.innerHTML = "show geom";
+      showGeomBtn.innerHTML = '⚪ geom';
+    }
+  });
+
+  const showParticlesBtn = document.querySelector('#show-particles');
+  showParticlesBtn.addEventListener('click', () => {
+    if (!showParticles) {
+      showParticles = true;
+      showParticlesBtn.innerHTML = '⚫ particles';
+    } else {
+      showParticles = false;
+      showParticlesBtn.innerHTML = '⚪ particles';
+    }
+  });
+
+  const showColorBtn = document.querySelector('#show-color');
+  showColorBtn.addEventListener('click', () => {
+    if (!showColor) {
+      showColor = true;
+      showColorBtn.innerHTML = '⚫ colors';
+      document.querySelector('#change-palette').disabled = false;
+    } else {
+      showColor = false;
+      showColorBtn.innerHTML = '⚪ colors';
+      document.querySelector('#change-palette').disabled = true;
     }
   });
 
@@ -117,7 +142,14 @@ function setup() {
     animationMode = 1;
     const timestamp = round(Date.now() / 1000);
     const filename = `journey-${timestamp}`;
-    saveCanvas(filename, 'png')
+    saveCanvas(filename, 'png');
+  });
+
+  const loadPaletteBtn = document.querySelector('#change-palette');
+  loadPaletteBtn.addEventListener('click', () => {
+    if (allColors.length) {
+      palette = pickPalette(allColors);
+    }
   });
 
   // Initialize points
@@ -183,10 +215,20 @@ function setup() {
 
   createCanvas(wd, ht);
   frameRate(fps);
+
+  initPalette().then((data) => {
+    allColors = data;
+    palette = pickPalette(data).map(c => color(c));
+  });
+
+  for (let j = 0; j < 2 * maxTicks; j++) {
+    const i = floor(random(5));
+    tickSequence.push(i);
+  }
 }
 
 function draw() {
-  background(0);
+  background(247);
   noStroke();
 
   if (animationMode === 0) {
@@ -200,14 +242,14 @@ function draw() {
 
   if (showFan) {
     // Render particles behind the fan
-    if (renderParticles) {
+    if (showParticles) {
       renderParticles(particlesBack);
     }
   
     renderFan(fanBlades, nullElements);
   
     // Render particles in front of the fan
-    if (renderParticles) {
+    if (showParticles) {
       renderParticles(particlesFront);
     }
   }
@@ -323,8 +365,8 @@ const buildSelectMenu = (shouldSetComp = false) => {
       removeBtn.addEventListener('click', () => {
         removeComp(comp.id);
         container.dispatchEvent(new Event('look', {
-          "bubbles": true,
-          "cancelable": false,
+          'bubbles': true,
+          'cancelable': false,
         }));
       });
 
