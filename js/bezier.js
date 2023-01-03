@@ -1,7 +1,7 @@
 class BeziCurve {
   constructor(curveSetPoints = {}) {
     let a211, a212, a222, c211, c212, c222;
-    if (Object.keys(curveSetPoints).length) {
+    if (curveSetPoints !== null && Object.keys(curveSetPoints).length) {
       const {
         pt1, pt2, pt3, pt4, pt5, pt6
       } = curveSetPoints;
