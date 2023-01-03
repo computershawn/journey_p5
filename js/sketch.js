@@ -25,6 +25,7 @@ let showFan = true;
 let showPoints = false;
 let showBezier = true;
 let showParticles = false;
+let showColor = true;
 
 // Colors
 let allColors = [];
@@ -75,10 +76,10 @@ function setup() {
   animModeBtn.addEventListener('click', () => {
     if (animationMode === 0) {
       animationMode = 1;
-      animModeBtn.innerHTML = "play";
+      animModeBtn.innerHTML = 'play';
     } else {
       animationMode = 0;
-      animModeBtn.innerHTML = "pause";
+      animModeBtn.innerHTML = 'pause';
     }
   });
 
@@ -86,10 +87,10 @@ function setup() {
   showPathBtn.addEventListener('click', () => {
     if (!showBezier) {
       showBezier = true;
-      showPathBtn.innerHTML = "⚫ path";
+      showPathBtn.innerHTML = '⚫ path';
     } else {
       showBezier = false;
-      showPathBtn.innerHTML = "⚪ path";
+      showPathBtn.innerHTML = '⚪ path';
     }
   });
 
@@ -97,10 +98,10 @@ function setup() {
   showGeomBtn.addEventListener('click', () => {
     if (!showFan) {
       showFan = true;
-      showGeomBtn.innerHTML = "⚫ geom";
+      showGeomBtn.innerHTML = '⚫ geom';
     } else {
       showFan = false;
-      showGeomBtn.innerHTML = "⚪ geom";
+      showGeomBtn.innerHTML = '⚪ geom';
     }
   });
 
@@ -108,10 +109,23 @@ function setup() {
   showParticlesBtn.addEventListener('click', () => {
     if (!showParticles) {
       showParticles = true;
-      showParticlesBtn.innerHTML = "⚫ particles";
+      showParticlesBtn.innerHTML = '⚫ particles';
     } else {
       showParticles = false;
-      showParticlesBtn.innerHTML = "⚪ particles";
+      showParticlesBtn.innerHTML = '⚪ particles';
+    }
+  });
+
+  const showColorBtn = document.querySelector('#show-color');
+  showColorBtn.addEventListener('click', () => {
+    if (!showColor) {
+      showColor = true;
+      showColorBtn.innerHTML = '⚫ colors';
+      document.querySelector('#change-palette').disabled = false;
+    } else {
+      showColor = false;
+      showColorBtn.innerHTML = '⚪ colors';
+      document.querySelector('#change-palette').disabled = true;
     }
   });
 
@@ -214,8 +228,7 @@ function setup() {
 }
 
 function draw() {
-  background(0);
-  background(127);
+  background(247);
   noStroke();
 
   if (animationMode === 0) {
@@ -352,8 +365,8 @@ const buildSelectMenu = (shouldSetComp = false) => {
       removeBtn.addEventListener('click', () => {
         removeComp(comp.id);
         container.dispatchEvent(new Event('look', {
-          "bubbles": true,
-          "cancelable": false,
+          'bubbles': true,
+          'cancelable': false,
         }));
       });
 

@@ -10,21 +10,20 @@ class FanBlade {
       pt2: createVector(0, 0),
       pt3: createVector(0, 0),
     };
-    this.co = color(0, 127);
+    this.co = this.isOpaque ? color(255) : color(0, 127);
+    this.altColorIndex = floor(random(5));
+    this.altColorOpacity = round(random(143, 247));
     this.value = random(1);
     this.colorStartIndex = floor(random(maxTicks));
   }
 
-  update(pt0, pt1, pt2, pt3, _co) {
+  update(pt0, pt1, pt2, pt3) {
     this.points.pt0 = pt0;
     this.points.pt1 = pt1;
     this.points.pt2 = pt2;
     this.points.pt3 = pt3;
     this.center.x = 0.5 * (pt0.x + pt2.x);
     this.center.y = 0.5 * (pt0.y + pt2.y);
-    if (this.isOpaque) {
-      this.co = _co;
-    }
   }
 
   getHeading() {
@@ -42,6 +41,8 @@ class FanBlade {
 
   render() {
     const {
+      altColorIndex,
+      altColorOpacity,
       isOpaque,
       co,
       points: { pt0, pt1, pt2, pt3 },
@@ -58,6 +59,11 @@ class FanBlade {
     strokeWeight(1);
     stroke(0, 63);
     fill(co);
+    if (showColor && !isOpaque && palette.length) {
+      const c = palette[altColorIndex];
+      const altColor = color(red(c), green(c), blue(c), altColorOpacity);
+        fill(altColor);
+    }
     beginShape();
     vertex(pt0.x, pt0.y);
     vertex(pt1.x, pt1.y);
@@ -81,7 +87,7 @@ class FanBlade {
     noFill();
 
     // Render tick marks
-    if (isOpaque) {
+    if (isOpaque && showColor) {
       const longSide = max(dist(pt0.x, pt0.y, pt1.x, pt1.y), dist(pt2.x, pt2.y, pt3.x, pt3.y));
       const len = constrain(longSide, 1, 200);
       const numTicks = map(len, 1, 200, 1, maxTicks);
@@ -90,8 +96,8 @@ class FanBlade {
         const b = j / numTicks;
         if (palette.length && tickSequence.length) {
           const tickMarkIndex = this.colorStartIndex + j - 1;
-          const co = palette[tickSequence[tickMarkIndex]];
-          stroke(co);
+          const tickColor = palette[tickSequence[tickMarkIndex]];
+          stroke(tickColor);
         }
         line(
           pt0.x + b * value * (pt1.x - pt0.x),
