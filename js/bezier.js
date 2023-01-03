@@ -94,7 +94,7 @@ class CurveSet {
       ctrl22,
     } = this;
     noFill();
-    stroke(255, 159);
+    stroke(0, 71);
 
     const diam1 = this.getRadius(anchor11.c, ctrl11.c);
     const diam2 = this.getRadius(anchor12.c, ctrl12.c);
@@ -198,7 +198,7 @@ class Point {
 
   render() {
     const { c, childPoint, diam, isHover } = this;
-    stroke(255);
+    stroke(0);
     fill(0, 0, 0, 95);
     circle(c.x, c.y, diam);
     noFill();
