@@ -10,14 +10,9 @@ class FanBlade {
       pt2: createVector(0, 0),
       pt3: createVector(0, 0),
     };
-    this.co = color(127, 127);
+    this.co = color(0, 127);
     this.value = random(1);
-    const tickMarks = [];
-    for (let i = 0; i < 10; i++) {
-      const index = floor(random(5));
-      tickMarks.push(index);
-    }
-    this.tickMarks = tickMarks;
+    this.colorStartIndex = floor(random(maxTicks));
   }
 
   update(pt0, pt1, pt2, pt3, _co) {
@@ -52,14 +47,14 @@ class FanBlade {
       points: { pt0, pt1, pt2, pt3 },
       value,
     } = this;
+
     // Shadow effect
-    if (isOpaque) {
-      strokeCap(SQUARE);
-      strokeWeight(3);
-      stroke(0, 55);
-      line(pt0.x, pt0.y, pt1.x, pt1.y);
-      line(pt1.x, pt1.y, pt2.x, pt2.y);
-    }
+    strokeCap(SQUARE);
+    strokeWeight(3);
+    stroke(0, 55);
+    line(pt0.x, pt0.y, pt1.x, pt1.y);
+    line(pt3.x, pt3.y, pt0.x, pt0.y);
+
     strokeWeight(1);
     stroke(0, 63);
     fill(co);
@@ -85,12 +80,18 @@ class FanBlade {
     // endShape(CLOSE);
     noFill();
 
+    // Render tick marks
     if (isOpaque) {
-      for (let j = 1; j < this.tickMarks.length; j++) {
-        const b = j / 10;
-        const tickMarkIndex = this.tickMarks[j];
-        if (palette.length) {
-          stroke(palette[tickMarkIndex]);
+      const longSide = max(dist(pt0.x, pt0.y, pt1.x, pt1.y), dist(pt2.x, pt2.y, pt3.x, pt3.y));
+      const len = constrain(longSide, 1, 200);
+      const numTicks = map(len, 1, 200, 1, maxTicks);
+  
+      for (let j = 1; j < numTicks; j++) {
+        const b = j / numTicks;
+        if (palette.length && tickSequence.length) {
+          const tickMarkIndex = this.colorStartIndex + j - 1;
+          const co = palette[tickSequence[tickMarkIndex]];
+          stroke(co);
         }
         line(
           pt0.x + b * value * (pt1.x - pt0.x),

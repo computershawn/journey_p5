@@ -5,7 +5,6 @@ class Particle {
     this.pos = _pos;
     this.diam = round(random(4, 6));
     this.travel = this.pos.x + this.diam;
-    this.co = random(1) > 0.5 ? color(violet) : color(lavender);
     this.lifespan = 200 + round(random(200));
     this.currentFrame = floor(random(this.lifespan));
     this.opacity = 0;

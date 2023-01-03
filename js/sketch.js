@@ -27,9 +27,10 @@ let showBezier = true;
 let showParticles = false;
 
 // Colors
-let lavender, violet;
 let allColors = [];
 let palette = [];
+const tickSequence = [];
+const maxTicks = 40;
 
 // Canvas
 // PGraphics canv;
@@ -49,9 +50,6 @@ window.addEventListener('look', (e) => {
 }, false);
 
 function setup() {
-  lavender = color(hexColors.lavender);
-  violet = color(hexColors.violet);
-
   // Set up UI Controls
   const frameSlider = document.querySelector('#frame-number');
   const balanceSlider = document.querySelector('#balance');
@@ -88,10 +86,10 @@ function setup() {
   showPathBtn.addEventListener('click', () => {
     if (!showBezier) {
       showBezier = true;
-      showPathBtn.innerHTML = "hide path";
+      showPathBtn.innerHTML = "⚫ path";
     } else {
       showBezier = false;
-      showPathBtn.innerHTML = "show path";
+      showPathBtn.innerHTML = "⚪ path";
     }
   });
 
@@ -99,10 +97,10 @@ function setup() {
   showGeomBtn.addEventListener('click', () => {
     if (!showFan) {
       showFan = true;
-      showGeomBtn.innerHTML = "hide geom";
+      showGeomBtn.innerHTML = "⚫ geom";
     } else {
       showFan = false;
-      showGeomBtn.innerHTML = "show geom";
+      showGeomBtn.innerHTML = "⚪ geom";
     }
   });
 
@@ -110,10 +108,10 @@ function setup() {
   showParticlesBtn.addEventListener('click', () => {
     if (!showParticles) {
       showParticles = true;
-      showParticlesBtn.innerHTML = "hide particles";
+      showParticlesBtn.innerHTML = "⚫ particles";
     } else {
       showParticles = false;
-      showParticlesBtn.innerHTML = "show particles";
+      showParticlesBtn.innerHTML = "⚪ particles";
     }
   });
 
@@ -208,10 +206,16 @@ function setup() {
     allColors = data;
     palette = pickPalette(data).map(c => color(c));
   });
+
+  for (let j = 0; j < 2 * maxTicks; j++) {
+    const i = floor(random(5));
+    tickSequence.push(i);
+  }
 }
 
 function draw() {
   background(0);
+  background(127);
   noStroke();
 
   if (animationMode === 0) {
