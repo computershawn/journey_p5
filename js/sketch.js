@@ -228,7 +228,11 @@ function setup() {
 }
 
 function draw() {
-  background(247);
+  if (palette.length && showColor) {
+    background(palette[0]);
+  } else {
+    background(247);
+  }
   noStroke();
 
   if (animationMode === 0) {

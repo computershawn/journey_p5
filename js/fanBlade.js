@@ -62,7 +62,7 @@ class FanBlade {
     if (showColor && !isOpaque && palette.length) {
       const c = palette[altColorIndex];
       const altColor = color(red(c), green(c), blue(c), altColorOpacity);
-        fill(altColor);
+      fill(altColor);
     }
     beginShape();
     vertex(pt0.x, pt0.y);
