@@ -26,6 +26,8 @@ let showPoints = false;
 let showBezier = true;
 let showParticles = false;
 let showColor = true;
+let showBackground = true;
+let bgIndex = 0;
 
 // Colors
 let allColors = [];
@@ -129,6 +131,18 @@ function setup() {
     }
   });
 
+  bgIndex = floor(random(5));
+  const showBackgroundBtn = document.querySelector('#show-background');
+  showBackgroundBtn.addEventListener('click', () => {
+    if (!showBackground) {
+      showBackground = true;
+      showBackgroundBtn.innerHTML = '⚫ background';
+    } else {
+      showBackground = false;
+      showBackgroundBtn.innerHTML = '⚪ background';
+    }
+  });
+
   const saveCompBtn = document.querySelector('#save-comp');
   saveCompBtn.addEventListener('click', () => {
     animationMode = 1;
@@ -228,8 +242,8 @@ function setup() {
 }
 
 function draw() {
-  if (palette.length && showColor) {
-    background(palette[0]);
+  if (palette.length && showColor && showBackground) {
+    background(palette[bgIndex]);
   } else {
     background(247);
   }
