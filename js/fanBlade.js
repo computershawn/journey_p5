@@ -11,7 +11,7 @@ class FanBlade {
       pt3: createVector(0, 0),
     };
     this.co = this.isOpaque ? color(255) : color(0, 127);
-    this.altColorIndex = floor(random(5));
+    this.altColorIndex = floor(random(numColors));
     this.altColorOpacity = round(random(143, 247));
     this.value = random(1);
     this.colorStartIndex = floor(random(maxTicks));
@@ -47,6 +47,7 @@ class FanBlade {
       co,
       points: { pt0, pt1, pt2, pt3 },
       value,
+      index,
     } = this;
 
     // Shadow effect
@@ -86,26 +87,52 @@ class FanBlade {
     // endShape(CLOSE);
     noFill();
 
-    // Render tick marks
-    if (isOpaque && showColor) {
-      const longSide = max(dist(pt0.x, pt0.y, pt1.x, pt1.y), dist(pt2.x, pt2.y, pt3.x, pt3.y));
-      const len = constrain(longSide, 1, 200);
-      const numTicks = map(len, 1, 200, 1, maxTicks);
+    if (isOpaque && showColor && palette.length) {
+      if (showTickmarks) {
+        // Render tick marks in random colors
+        const longSide = max(dist(pt0.x, pt0.y, pt1.x, pt1.y), dist(pt2.x, pt2.y, pt3.x, pt3.y));
+        const len = constrain(longSide, 1, 200);
+        const numTicks = map(len, 1, 200, 1, maxTicks);
   
-      for (let j = 1; j < numTicks; j++) {
-        const b = j / numTicks;
-        if (palette.length && tickSequence.length) {
-          const tickMarkIndex = this.colorStartIndex + j - 1;
-          const tickColor = palette[tickSequence[tickMarkIndex]];
-          stroke(tickColor);
+        for (let j = 1; j < numTicks; j++) {
+          const b = j / numTicks;
+          if (tickSequence.length) {
+            const tickMarkIndex = this.colorStartIndex + j - 1;
+            const tickColor = palette[tickSequence[tickMarkIndex]];
+            stroke(tickColor);
+          }
+          line(
+            pt0.x + b * value * (pt1.x - pt0.x),
+            pt0.y + b * value * (pt1.y - pt0.y),
+            pt3.x + b * value * (pt2.x - pt3.x),
+            pt3.y + b * value * (pt2.y - pt3.y)
+          );
         }
-        line(
-          pt0.x + b * value * (pt1.x - pt0.x),
-          pt0.y + b * value * (pt1.y - pt0.y),
-          pt3.x + b * value * (pt2.x - pt3.x),
-          pt3.y + b * value * (pt2.y - pt3.y)
-        );
       }
+
+      if (isGradient) {
+        // Render tick marks as gradient
+        const numLevels = 40;
+        for (let j = 0; j < numLevels; j++) {
+          const p = j / numLevels;
+          const q = (j + 1) / numLevels;
+          noStroke();
+          if (tickSequenceOpacity.length) {
+            const tickOpacityIndex = this.colorStartIndex + j - 1;
+            const tickOpacity = tickSequenceOpacity[tickOpacityIndex];
+            const c = palette[gradientIndex];
+            fill(red(c), green(c), blue(c), tickOpacity);
+          }
+  
+          beginShape();
+          vertex(pt1.x + p * (pt0.x - pt1.x), pt1.y + p * (pt0.y - pt1.y));
+          vertex(pt2.x + p * (pt3.x - pt2.x), pt2.y + p * (pt3.y - pt2.y));
+          vertex(pt2.x + q * (pt3.x - pt2.x), pt2.y + q * (pt3.y - pt2.y));
+          vertex(pt1.x + q * (pt0.x - pt1.x), pt1.y + q * (pt0.y - pt1.y));
+          endShape(CLOSE);
+        }
+      }
+
     }
   }
 }

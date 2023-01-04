@@ -28,11 +28,17 @@ let showParticles = false;
 let showColor = true;
 let showBackground = true;
 let bgIndex = 0;
+let isGradient = false;
+let showTickmarks = true;
+let gradientIndex = 0;
+const numColors = 5;
 
 // Colors
 let allColors = [];
 let palette = [];
 const tickSequence = [];
+const tickSequenceOpacity = [];
+const tickNoiseScale = 0.01;
 const maxTicks = 40;
 
 // Canvas
@@ -79,9 +85,11 @@ function setup() {
     if (animationMode === 0) {
       animationMode = 1;
       animModeBtn.innerHTML = 'play';
+      noLoop();
     } else {
       animationMode = 0;
       animModeBtn.innerHTML = 'pause';
+      loop();
     }
   });
 
@@ -129,9 +137,10 @@ function setup() {
       showColorBtn.innerHTML = '⚪ colors';
       document.querySelector('#change-palette').disabled = true;
     }
+    redraw();
   });
 
-  bgIndex = floor(random(5));
+  bgIndex = floor(random(numColors));
   const showBackgroundBtn = document.querySelector('#show-background');
   showBackgroundBtn.addEventListener('click', () => {
     if (!showBackground) {
@@ -141,6 +150,20 @@ function setup() {
       showBackground = false;
       showBackgroundBtn.innerHTML = '⚪ background';
     }
+    redraw();
+  });
+  
+  gradientIndex = floor(random(numColors));
+  const gradientBtn = document.querySelector('#toggle-gradient');
+  gradientBtn.addEventListener('click', () => {
+    if (!isGradient) {
+      isGradient = true;
+      gradientBtn.innerHTML = '⚫ gradient';
+    } else {
+      isGradient = false;
+      gradientBtn.innerHTML = '⚪ gradient';
+    }
+    redraw();
   });
 
   const saveCompBtn = document.querySelector('#save-comp');
@@ -163,6 +186,7 @@ function setup() {
   loadPaletteBtn.addEventListener('click', () => {
     if (allColors.length) {
       palette = pickPalette(allColors);
+      redraw();
     }
   });
 
@@ -236,9 +260,28 @@ function setup() {
   });
 
   for (let j = 0; j < 2 * maxTicks; j++) {
-    const i = floor(random(5));
+    const i = floor(random(numColors));
     tickSequence.push(i);
   }
+
+  // let nOff = 0.0;
+  // for (let j = 0; j < 2 * maxTicks; j++) {
+  //   nOff += tickNoiseScale;
+  //   const val = noise(nOff);
+  //   const wiggle = round(random(8)) * (random() > 0.5 ? 1 : -1);
+  //   let noiseVal = round(val * 255); // map(value, minVal, maxVal, 0, 255));
+  //   noiseVal = constrain(noiseVal + wiggle, 0, 255);
+  //   tickSequenceOpacity.push(noiseVal);
+  // }
+
+  for (let j = 0; j < 2 * maxTicks; j++) {
+    let val = 255 * j / (2 * maxTicks);
+    const wiggle = round(random(6)) * (random() > 0.5 ? 1 : -1);
+    val = constrain(val + wiggle, 0, 255);
+    tickSequenceOpacity.push(val);
+  }
+
+  noLoop();
 }
 
 function draw() {
