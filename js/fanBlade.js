@@ -11,7 +11,7 @@ class FanBlade {
       pt3: createVector(0, 0),
     };
     this.co = this.isOpaque ? color(255) : color(0, 127);
-    this.altColorIndex = floor(random(5));
+    this.altColorIndex = floor(random(numColors));
     this.altColorOpacity = round(random(143, 247));
     this.value = random(1);
     this.colorStartIndex = floor(random(maxTicks));

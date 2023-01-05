@@ -26,12 +26,15 @@ let showPoints = false;
 let showBezier = true;
 let showParticles = false;
 let showColor = true;
+let showBackground = true;
+let bgIndex = 0;
 
 // Colors
 let allColors = [];
 let palette = [];
 const tickSequence = [];
 const maxTicks = 40;
+const numColors = 5;
 
 // Canvas
 // PGraphics canv;
@@ -129,6 +132,30 @@ function setup() {
     }
   });
 
+  const showBackgroundBtn = document.querySelector('#show-background');
+  showBackgroundBtn.addEventListener('click', () => {
+    if (!showBackground) {
+      showBackground = true;
+      showBackgroundBtn.innerHTML = '⚫ background';
+      changeBackgroundBtn.disabled = false;
+    } else {
+      showBackground = false;
+      showBackgroundBtn.innerHTML = '⚪ background';
+      changeBackgroundBtn.disabled = true;
+    }
+  });
+
+  const changeBackgroundBtn = document.querySelector('#change-background');
+  changeBackgroundBtn.addEventListener('click', () => {
+    bgIndex += 1;
+    if (bgIndex === numColors) {
+      bgIndex = 0;
+      showBackground = false;
+      showBackgroundBtn.innerHTML = '⚪ background';
+      changeBackgroundBtn.disabled = true;
+    }
+  });
+
   const saveCompBtn = document.querySelector('#save-comp');
   saveCompBtn.addEventListener('click', () => {
     animationMode = 1;
@@ -222,13 +249,18 @@ function setup() {
   });
 
   for (let j = 0; j < 2 * maxTicks; j++) {
-    const i = floor(random(5));
+    const i = floor(random(numColors));
     tickSequence.push(i);
   }
 }
 
 function draw() {
-  background(247);
+  if (palette.length && showColor && showBackground) {
+    background(palette[bgIndex]);
+  } else {
+    background(247);
+  }
+
   noStroke();
 
   if (animationMode === 0) {
