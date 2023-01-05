@@ -16,7 +16,7 @@ const fanBlades = [];
 
 // Geometry
 const radius = 108; // 48;
-const numLoops = 200; // 160; // 200; // 160; // 60;
+const numLoops = 320; // 160; // 200; // 160; // 60;
 let balance = 0.5;
 let diff = 4.5;
 
