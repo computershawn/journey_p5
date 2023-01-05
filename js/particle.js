@@ -34,7 +34,8 @@ class Particle {
   }
 
   update() {
-    let {currentFrame, pos, spinSpeed} = this;
+    let {currentFrame, pos} = this;
+    const {spinSpeed} = this;
     const {x0, y0, speed, heading, fadeTime} = this;
     const a = TWO_PI * (currentFrame % spinSpeed) / spinSpeed;
     this.xStretch = sin(a);
@@ -52,15 +53,21 @@ class Particle {
 
   render() {
     const {
-      opacity, pos, xStretch, diam, co, heading,
+      opacity, pos, xStretch, diam, heading,
     } = this;
-    stroke(47, opacity);
-    // fill(co, opacity);
-    fill(255, 223);
-    push();
-    translate(pos.x, pos.y);
-    rotate(heading)
-    ellipse(0, 0, xStretch * diam, diam);
-    pop();
+    // stroke(47, opacity);
+    // fill(255, 223);
+    // push();
+    // translate(pos.x, pos.y);
+    // rotate(heading)
+    // ellipse(0, 0, xStretch * diam, diam);
+    // pop();
+    canv.stroke(47, opacity);
+    canv.fill(255, 223);
+    canv.push();
+    canv.translate(pos.x, pos.y);
+    canv.rotate(heading)
+    canv.ellipse(0, 0, xStretch * diam, diam);
+    canv.pop();
   }
 }

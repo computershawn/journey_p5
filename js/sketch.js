@@ -38,6 +38,7 @@ const numColors = 5;
 
 // Canvas
 // PGraphics canv;
+let canv;
 
 // const values = [];
 
@@ -190,12 +191,14 @@ function setup() {
   //   pts.push(vec);
   // }
   //
+
   // CASE B: Unfurly path is an arc
   // const arcPoints = getArcPoints(QUARTER_PI, numLoops, 400);
   // for (let j = 0; j < numLoops; j++) {
   //   pts.push(arcPoints[j]);
   // }
   //
+
   // CASE C: Unfurly path is a Bezier curve
   const existingComps = getAllComps();
   const csp = existingComps.length
@@ -219,14 +222,6 @@ function setup() {
     fanBlades.push(fb);
   }
 
-  // Do an initial run to get a 'heading' value from
-  // each fan blade; Each particle can attach itself
-  // to a random fan blade and move along its heading
-  nullElements.forEach(nE => {
-    nE.update(frameCount);
-  });
-  renderFan(fanBlades, nullElements);
-
   // Initialize particles
   for (let j = 0; j < numParticles / 2; j++) {
     const rand1 = getRandomIndex(fanBlades.length);
@@ -241,7 +236,16 @@ function setup() {
   pixelDensity(den);
 
   createCanvas(wd, ht);
+  canv = createGraphics(wd, ht);
   frameRate(fps);
+
+  // Do an initial run to get a 'heading' value from
+  // each fan blade; Each particle can attach itself
+  // to a random fan blade and move along its heading
+  nullElements.forEach(nE => {
+    nE.update(frameCount);
+  });
+  renderFan(fanBlades, nullElements);
 
   initPalette().then((data) => {
     allColors = data;
@@ -255,13 +259,14 @@ function setup() {
 }
 
 function draw() {
+  background(247);
   if (palette.length && showColor && showBackground) {
-    background(palette[bgIndex]);
+    canv.background(palette[bgIndex]);
   } else {
-    background(247);
+    canv.background(247);
   }
 
-  noStroke();
+  canv.noStroke();
 
   if (animationMode === 0) {
     currentCycleFrame = frameCount % durationFrames;
@@ -277,7 +282,7 @@ function draw() {
     if (showParticles) {
       renderParticles(particlesBack);
     }
-  
+
     renderFan(fanBlades, nullElements);
   
     // Render particles in front of the fan
@@ -286,9 +291,7 @@ function draw() {
     }
   }
 
-  if (showPoints) {
-    renderPoints();
-  }
+  image(canv, 0, 0);
 
   // Bezier curve rendering
   if (showBezier) {
@@ -312,15 +315,6 @@ const renderParticles = (particleList) => {
   });
 
 }
-
-const renderPoints = () => {
-  nullElements.forEach(elem => {
-    noStroke();
-    fill(255, 0, 0);
-    circle(elem.point0.x + elem.x, elem.point0.y + elem.y, 3);
-    circle(elem.point1.x + elem.x, elem.point1.y + elem.y, 3);
-  });
-};
 
 const setComp = (
   compParams,

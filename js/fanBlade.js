@@ -4,11 +4,17 @@ class FanBlade {
     this.index = _index;
     this.isOpaque = random(1) > 0.1;
     this.topEdge = random(1) > 0.5 ? true : false;
+    // this.points = {
+    //   pt0: createVector(0, 0),
+    //   pt1: createVector(0, 0),
+    //   pt2: createVector(0, 0),
+    //   pt3: createVector(0, 0),
+    // };
     this.points = {
-      pt0: createVector(0, 0),
-      pt1: createVector(0, 0),
-      pt2: createVector(0, 0),
-      pt3: createVector(0, 0),
+      pt0: {x: 0, y: 0},
+      pt1: {x: 0, y: 0},
+      pt2: {x: 0, y: 0},
+      pt3: {x: 0, y: 0},
     };
     this.co = this.isOpaque ? color(255) : color(0, 127);
     this.altColorIndex = floor(random(numColors));
@@ -50,31 +56,31 @@ class FanBlade {
     } = this;
 
     // Shadow effect
-    strokeCap(SQUARE);
-    strokeWeight(3);
-    stroke(0, 55);
-    line(pt0.x, pt0.y, pt1.x, pt1.y);
-    line(pt3.x, pt3.y, pt0.x, pt0.y);
+    canv.strokeCap(SQUARE);
+    canv.strokeWeight(3);
+    canv.stroke(0, 55);
+    canv.line(pt0.x, pt0.y, pt1.x, pt1.y);
+    canv.line(pt3.x, pt3.y, pt0.x, pt0.y);
 
-    strokeWeight(1);
-    stroke(0, 63);
-    fill(co);
+    canv.strokeWeight(1);
+    canv.stroke(0, 63);
+    canv.fill(co);
     if (showColor && !isOpaque && palette.length) {
       const c = palette[altColorIndex];
       const altColor = color(red(c), green(c), blue(c), altColorOpacity);
-        fill(altColor);
+      canv.fill(altColor);
     }
-    beginShape();
-    vertex(pt0.x, pt0.y);
-    vertex(pt1.x, pt1.y);
-    vertex(pt2.x, pt2.y);
-    vertex(pt3.x, pt3.y);
+    canv.beginShape();
+    canv.vertex(pt0.x, pt0.y);
+    canv.vertex(pt1.x, pt1.y);
+    canv.vertex(pt2.x, pt2.y);
+    canv.vertex(pt3.x, pt3.y);
     // texture(img);
     // vertex(point0.x, point0.y, point0.x, point0.y);
     // vertex(point1.x, point1.y, point1.x, point1.y);
     // vertex(point2.x, point2.y, point2.x, point2.y);
     // vertex(point3.x, point3.y, point3.x, point3.y);
-    endShape(CLOSE);
+    canv.endShape(CLOSE);
 
     // noStroke();
     // fill(0, 31);
@@ -84,22 +90,23 @@ class FanBlade {
     // vertex(pt3.x + value * (pt2.x - pt3.x), pt3.y + value * (pt2.y - pt3.y));
     // vertex(pt3.x, pt3.y);
     // endShape(CLOSE);
-    noFill();
+    canv.noFill();
 
     // Render tick marks
     if (isOpaque && showColor) {
       const longSide = max(dist(pt0.x, pt0.y, pt1.x, pt1.y), dist(pt2.x, pt2.y, pt3.x, pt3.y));
-      const len = constrain(longSide, 1, 200);
-      const numTicks = map(len, 1, 200, 1, maxTicks);
+      const len = constrain(longSide, 1, 100);
+      const numTicks = map(len, 1, 100, 1, maxTicks);
+      // When maxTicks is 40, a lot of frames get dropped. Can something be optimized?
   
       for (let j = 1; j < numTicks; j++) {
         const b = j / numTicks;
         if (palette.length && tickSequence.length) {
           const tickMarkIndex = this.colorStartIndex + j - 1;
           const tickColor = palette[tickSequence[tickMarkIndex]];
-          stroke(tickColor);
+          canv.stroke(tickColor);
         }
-        line(
+        canv.line(
           pt0.x + b * value * (pt1.x - pt0.x),
           pt0.y + b * value * (pt1.y - pt0.y),
           pt3.x + b * value * (pt2.x - pt3.x),

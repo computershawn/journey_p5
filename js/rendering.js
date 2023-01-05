@@ -13,8 +13,6 @@ const renderFan = (fanBladesArr, nullRefs) => {
     const px3 = nextRef.point0.x + nextRef.x;
     const py3 = nextRef.point0.y + nextRef.y;
 
-    // const co = color(lerpColor(color(239), white, values[i]), 223);
-    // const co = color(255, 239);
     const fb = fanBladesArr[j];
     const pv0 = {x: px0, y: py0};
     const pv1 = {x: px1, y: py1};
@@ -23,6 +21,5 @@ const renderFan = (fanBladesArr, nullRefs) => {
     
     fb.update(pv0, pv1, pv2, pv3);
     fb.render();
-    // noLoop();
   }
 };
